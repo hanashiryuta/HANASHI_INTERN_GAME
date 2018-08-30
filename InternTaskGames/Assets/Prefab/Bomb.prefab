@@ -23,9 +23,7 @@ GameObject:
   - component: {fileID: 135568347179275878}
   - component: {fileID: 23127857171782226}
   - component: {fileID: 54147547556459882}
-  - component: {fileID: 114626059933061620}
   - component: {fileID: 114405892340063948}
-  - component: {fileID: 114654307032272998}
   m_Layer: 9
   m_Name: Bomb
   m_TagString: Bomb
@@ -113,34 +111,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeca4e68353a5e84a83a80cd53d47a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Grav: {x: 0, y: 4, z: 0}
   bombState: 0
-  returnSpeed: 1
---- !u!114 &114626059933061620
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1599090907157618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1524e5d70533463459e410966333a127, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deathTime: 5
---- !u!114 &114654307032272998
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1599090907157618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e792fbab59140f84a82b77e02e01c94b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallState: 1
   enemy: {fileID: 0}
+  wallType: 1
+  Grav: {x: 0, y: 4, z: 0}
+  returnSpeed: 1
+  deathTime: 5
 --- !u!135 &135568347179275878
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -58,6 +58,7 @@ public class EnemySpawnController : MonoBehaviour {
                 enemy.GetComponent<EnemyBombThrow>().wallType = wallType;
                 //スポーン時間再設定
                 spawnTime = Random.Range(minTimeRange, maxTimeRange);
+                enemy = null;
             }
         }
 	}

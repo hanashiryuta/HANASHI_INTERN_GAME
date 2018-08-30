@@ -7,6 +7,9 @@ TagManager:
   - SpawnPoint
   - Bomb
   - WallPoint
+  - LEFTWALL
+  - FRONTWALL
+  - RIGHTWALL
   layers:
   - Default
   - TransparentFX
@@ -21,7 +24,7 @@ TagManager:
   - Wall
   - ReturnBomb
   - Racket
-  - 
+  - EyeWall
   - 
   - 
   - 

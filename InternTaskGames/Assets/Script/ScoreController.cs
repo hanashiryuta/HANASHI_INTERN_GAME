@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class ScoreController : MonoBehaviour {
 
@@ -80,5 +81,12 @@ public class ScoreController : MonoBehaviour {
     public static float ReturnMagnification()
     {
         return scoreMagni;
+    }
+
+    public static void SavedScore()
+    {
+        StreamWriter sw = new StreamWriter(Application.streamingAssetsPath + "/score.txt");
+        sw.WriteLine(score.ToString());
+        sw.Close();
     }
 }

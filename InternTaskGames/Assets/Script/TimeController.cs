@@ -38,6 +38,7 @@ public class TimeController : MonoBehaviour {
         //ゲーム時間が0になったら
         if(gameTime <= 0)
         {
+            ScoreController.SavedScore();
             //リザルトシーンへ移行
             SceneManager.LoadScene("Result");
         }

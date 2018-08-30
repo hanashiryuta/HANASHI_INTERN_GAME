@@ -11,5 +11,28 @@ public class WallController : MonoBehaviour {
 
     //壁の位置
     public GameObject[] wallPoint;
+
+    [HideInInspector]
+    public List<List<GameObject>> bombs;
+
+    void Start()
+    {
+        bombs = new List<List<GameObject>>()
+        {
+            new List<GameObject>(),
+            new List<GameObject>(),
+            new List<GameObject>()
+        };
+    }
+
+    public void AddBombs(GameObject bomb,WallType wallType)
+    {
+        bombs[(int)wallType].Add(bomb);
+    }
+
+    public void RemoveBombs(GameObject bomb, WallType wallType)
+    {
+        bombs[(int)wallType].Remove(bomb);
+    }
     
 }

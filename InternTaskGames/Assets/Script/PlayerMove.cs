@@ -17,7 +17,7 @@ public class PlayerMove : MonoBehaviour {
             //スコア初期化
             ComboController.ComboInit();
             //爆弾消滅
-            Destroy(col.gameObject);
+            col.gameObject.GetComponent<BombMove>().bombState = BombState.DEATH;
         }
     }
 }
