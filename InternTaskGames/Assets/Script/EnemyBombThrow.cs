@@ -22,9 +22,12 @@ public class EnemyBombThrow : MonoBehaviour
     //ターゲットオブジェクト
     GameObject targetObject;
     public float angle = 30;
+
+    public static bool isThrow;
     
 	// Use this for initialization
 	void Start () {
+        isThrow = false;
         //クラス取得
         enemyDeath = GetComponent<EnemyDeath>();
         //ターゲット検索
@@ -33,8 +36,8 @@ public class EnemyBombThrow : MonoBehaviour
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        //射出までの時間を減らしていく
-        throwTime -= Time.deltaTime;
+            //射出までの時間を減らしていく
+            throwTime -= Time.deltaTime;
         //射出までの時間が0になったら（時間が来たら）、かつ
         //エネミーが消滅状態でなければ
         if(throwTime <= 0&&!enemyDeath.isDeath)

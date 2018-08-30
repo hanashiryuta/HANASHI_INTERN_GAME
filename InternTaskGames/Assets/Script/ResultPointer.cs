@@ -15,7 +15,7 @@ public class ResultPointer : MonoBehaviour {
     /// </summary>
     public void TitleBackButton()
     {
-        SceneManager.LoadScene("Title");
+        GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿///
+﻿using System;
+///
 ///製作日：2018/08/28
 ///作成者：葉梨竜太
 ///壁管理クラス
@@ -34,5 +35,15 @@ public class WallController : MonoBehaviour {
     {
         bombs[(int)wallType].Remove(bomb);
     }
-    
+
+    public void BombsReset()
+    {
+        foreach(var cx in bombs)
+        {
+            for(int i = 0; i < cx.Count; i++)
+            {
+                cx[i].GetComponent<BombMove>().bombState = BombState.DEATH;
+            }
+        }
+    }
 }

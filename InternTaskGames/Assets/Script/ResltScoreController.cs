@@ -7,6 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
+using System.Text;
 
 public class ResltScoreController : MonoBehaviour {
 
@@ -17,6 +19,9 @@ public class ResltScoreController : MonoBehaviour {
     //スコア
     float score;
 
+    public GameObject resultRankingObj;
+    Text resultRankingText;
+
 	// Use this for initialization
 	void Start () {
         //スコア取得
@@ -25,5 +30,14 @@ public class ResltScoreController : MonoBehaviour {
         resultText = resultTextObj.GetComponent<Text>();
         //リザルトスコア表示
         resultText.text = "Score:" + score.ToString();
-	}
+        resultRankingText = resultRankingObj.GetComponent<Text>();
+        string Ranking = PlayerPrefs.GetString("Ranking");
+        string[] rankString = Ranking.Split(',');
+        string rank = "";
+        foreach(var cx in rankString)
+        {
+            rank += cx + "\n";
+        }
+        resultRankingText.text = rank;
+    }
 }
