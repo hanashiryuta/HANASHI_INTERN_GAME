@@ -16,7 +16,7 @@ public class TitlePointer : MonoBehaviour {
     /// </summary>
     public void GameStartButton()
     {
-        SceneManager.LoadScene("gameMain");
+        GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
     }
 
     /// <summary>

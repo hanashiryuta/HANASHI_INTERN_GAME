@@ -33,17 +33,21 @@ public class EnemySpawnController : MonoBehaviour {
     public int maxTimeRange = 8;
     //壁の種類
     public WallType wallType;
+    
+    public static bool isSpawn;
 
 	// Use this for initialization
 	void Start () {
+        isSpawn = false;
         //スポーン時間設定
         spawnTime = Random.Range(minTimeRange, maxTimeRange);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if(isSpawn)
         //スポーン時間を減らす
-        spawnTime -= Time.deltaTime;
+            spawnTime -= Time.deltaTime;
         //スポーン時間が0以下になったら（時間が来たら）
         if(spawnTime <= 0)
         {
@@ -58,6 +62,7 @@ public class EnemySpawnController : MonoBehaviour {
                 enemy.GetComponent<EnemyBombThrow>().wallType = wallType;
                 //スポーン時間再設定
                 spawnTime = Random.Range(minTimeRange, maxTimeRange);
+                enemy = null;
             }
         }
 	}

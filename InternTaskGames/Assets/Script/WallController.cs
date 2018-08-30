@@ -1,4 +1,5 @@
-﻿///
+﻿using System;
+///
 ///製作日：2018/08/28
 ///作成者：葉梨竜太
 ///壁管理クラス
@@ -11,5 +12,38 @@ public class WallController : MonoBehaviour {
 
     //壁の位置
     public GameObject[] wallPoint;
-    
+
+    [HideInInspector]
+    public List<List<GameObject>> bombs;
+
+    void Start()
+    {
+        bombs = new List<List<GameObject>>()
+        {
+            new List<GameObject>(),
+            new List<GameObject>(),
+            new List<GameObject>()
+        };
+    }
+
+    public void AddBombs(GameObject bomb,WallType wallType)
+    {
+        bombs[(int)wallType].Add(bomb);
+    }
+
+    public void RemoveBombs(GameObject bomb, WallType wallType)
+    {
+        bombs[(int)wallType].Remove(bomb);
+    }
+
+    public void BombsReset()
+    {
+        foreach(var cx in bombs)
+        {
+            for(int i = 0; i < cx.Count; i++)
+            {
+                cx[i].GetComponent<BombMove>().bombState = BombState.DEATH;
+            }
+        }
+    }
 }

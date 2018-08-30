@@ -43,7 +43,7 @@ public class EnemyDeath : MonoBehaviour {
                 //スコア加算
                 ScoreController.ScoreAdd(100);
                 //爆弾消滅
-                Destroy(col.gameObject);
+                col.gameObject.GetComponent<BombMove>().bombState = BombState.DEATH;
                 //消滅時間を0に
                 deathTime = 0;
             }

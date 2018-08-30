@@ -15,6 +15,7 @@ public enum BombState
     NORMAL,//通常状態
     RETURNSET,//返され始め
     RETURNMOVE,//返され中
+    DEATH
 }
 
 public class BombMove : MonoBehaviour {
@@ -43,6 +44,8 @@ public class BombMove : MonoBehaviour {
     public float returnSpeed = 000.1f;
     //壁管理クラス
     WallController wallController;
+    //消滅までの時間
+    public float deathTime = 5.0f;
 
     // Use this for initialization
     void Start () {
@@ -52,6 +55,7 @@ public class BombMove : MonoBehaviour {
         wallPoint = wallController.wallPoint;
         //リジッドボディ取得
         rigid = GetComponent<Rigidbody>();
+        wallController.AddBombs(this.gameObject,wallType);
 	}
 
     // Update is called once per frame
@@ -63,6 +67,14 @@ public class BombMove : MonoBehaviour {
             case BombState.NORMAL:
                 //自分で設定した重力を加える
                 rigid.AddForce(-Grav, ForceMode.Acceleration);
+
+                deathTime -= Time.deltaTime;
+                //消滅までの時間が0になったら（時間が来たら）
+                if (deathTime <= 0)
+                {
+                    //オブジェクト消滅状態に
+                    bombState = BombState.DEATH;
+                }
                 break;
 
             //返され始め
@@ -86,8 +98,12 @@ public class BombMove : MonoBehaviour {
             //返され中
             case BombState.RETURNMOVE:
                 //ターゲットに向かって移動
-                transform.position += velocity * returnSpeed;
-                
+                transform.position += velocity * returnSpeed;                
+                break;
+
+            case BombState.DEATH:
+                wallController.RemoveBombs(this.gameObject,wallType);
+                Destroy(gameObject);
                 break;
         }
     }
