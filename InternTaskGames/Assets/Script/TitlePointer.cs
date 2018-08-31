@@ -24,6 +24,6 @@ public class TitlePointer : MonoBehaviour {
     /// </summary>
     public void GameEndButton()
     {
-
+        Application.Quit();
     }
 }

@@ -57,6 +57,11 @@ public class ScoreController : MonoBehaviour {
         else
             //スコア倍率表示
             magniText.text = "×" + scoreMagni.ToString("F1");
+
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            score += 20000;
+        }
 	}
 
     /// <summary>

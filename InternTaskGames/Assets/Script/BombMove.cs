@@ -47,6 +47,9 @@ public class BombMove : MonoBehaviour {
     //消滅までの時間
     public float deathTime = 5.0f;
 
+
+    public GameObject explosionParticle;
+
     // Use this for initialization
     void Start () {
         //壁管理クラス取得
@@ -65,6 +68,10 @@ public class BombMove : MonoBehaviour {
         {
             //通常状態
             case BombState.NORMAL:
+                transform.Rotate(new Vector3(Random.Range(0, 180),
+                                             Random.Range(0, 180),
+                                             Random.Range(0, 180)
+                                            ) * Time.deltaTime);
                 //自分で設定した重力を加える
                 rigid.AddForce(-Grav, ForceMode.Acceleration);
 
@@ -97,11 +104,16 @@ public class BombMove : MonoBehaviour {
 
             //返され中
             case BombState.RETURNMOVE:
+                transform.Rotate(new Vector3(Random.Range(0, 180),
+                                             Random.Range(0, 180),
+                                             Random.Range(0, 180)
+                                            ) * Time.deltaTime * 2);
                 //ターゲットに向かって移動
                 transform.position += velocity * returnSpeed;                
                 break;
 
             case BombState.DEATH:
+                Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 wallController.RemoveBombs(this.gameObject,wallType);
                 Destroy(gameObject);
                 break;

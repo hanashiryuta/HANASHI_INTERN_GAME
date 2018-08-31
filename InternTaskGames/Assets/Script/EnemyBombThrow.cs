@@ -24,6 +24,8 @@ public class EnemyBombThrow : MonoBehaviour
     public float angle = 30;
 
     public static bool isThrow;
+
+    public Animator anim;
     
 	// Use this for initialization
 	void Start () {
@@ -42,6 +44,7 @@ public class EnemyBombThrow : MonoBehaviour
         //エネミーが消滅状態でなければ
         if(throwTime <= 0&&!enemyDeath.isDeath)
         {
+            anim.SetTrigger("Throw");
             //爆弾生成
             GameObject bomb = Instantiate(originBomb, transform.position, Quaternion.identity);
             //爆弾投擲

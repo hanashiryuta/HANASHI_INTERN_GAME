@@ -23,6 +23,6 @@ public class ResultPointer : MonoBehaviour {
     /// </summary>
     public void GameEndButton()
     {
-
+        Application.Quit();
     }
 }
