@@ -18,8 +18,8 @@ public class ResltScoreController : MonoBehaviour {
     Text resultText;
     //スコア
     float score;
-    
-    Text resultRankingText;
+    //リザルトランキング表示テキスト
+    public Text resultRankingText;
 
 	// Use this for initialization
 	void Start () {

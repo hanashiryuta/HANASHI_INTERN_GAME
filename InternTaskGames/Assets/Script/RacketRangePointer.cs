@@ -17,6 +17,9 @@ public class RacketRangePointer : MonoBehaviour {
     float racketRange = 10;
     public List<GameObject> racketRangeWalls;
 
+    float currentRacketRange;
+    float previousRacketRange;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -41,11 +44,31 @@ public class RacketRangePointer : MonoBehaviour {
         //ラケットを回転
         racket.transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
 
+        RacketRangeSet();
+
         foreach(var cx in racketRangeWalls)
         {
-            cx.transform.localPosition = new Vector3(cx.transform.position.x, cx.transform.position.y, racketRange);
+            cx.transform.localPosition = new Vector3(cx.transform.localPosition.x, cx.transform.localPosition.y, racketRange);
 
             cx.transform.localScale = new Vector3(racketRange, cx.transform.localScale.y, cx.transform.localScale.z);
         }
+
+        currentRacketRange = previousRacketRange;
 	}
+
+    void RacketRangeSet()
+    {
+        previousRacketRange = OVRInput.Get(OVRInput.Axis2D.PrimaryTouchpad).y;
+
+        if (previousRacketRange > currentRacketRange)
+        {
+            if (racketRange < 20)
+                racketRange++;
+        }
+        else if(previousRacketRange < currentRacketRange)
+        {
+            if (racketRange > 5)
+                racketRange--;
+        }
+    }
 }

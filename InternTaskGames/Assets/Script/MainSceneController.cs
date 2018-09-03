@@ -11,6 +11,8 @@ public class MainSceneController : MonoBehaviour {
 
     //フェード管理クラス
     FadeController fadeController;
+    //カウントダウンをしているかどうか
+    public static bool isCountDown = true;
     //シーンが始まるか
     bool isSceneStart = false;
     //シーンが終わるか
@@ -18,6 +20,7 @@ public class MainSceneController : MonoBehaviour {
 
     void Start()
     {
+        isCountDown = true;
         //フェードコントローラー取得
         fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
     }
@@ -27,8 +30,10 @@ public class MainSceneController : MonoBehaviour {
         //フェード管理クラスが待機状態だったら
         if(fadeController.fadeActionState == FadeActionState.Stay)
         {
-            //シーンを始める
-            SceneStart();
+            //カウントダウンをしていなければ
+            if (!isCountDown)
+                //シーンを始める
+                SceneStart();
         }
         //フェード管理クラスがシーン終了時状態だったら
         else if(fadeController.fadeActionState == FadeActionState.SceneEnd)
@@ -41,7 +46,7 @@ public class MainSceneController : MonoBehaviour {
     /// <summary>
     /// シーン開始処理
     /// </summary>
-    public void SceneStart()
+    void SceneStart()
     {
         if (!isSceneStart)
         {
@@ -58,7 +63,7 @@ public class MainSceneController : MonoBehaviour {
     /// <summary>
     /// シーン終了処理
     /// </summary>
-    public void SceneEnd()
+    void SceneEnd()
     {
         if (!isSceneEnd)
         {

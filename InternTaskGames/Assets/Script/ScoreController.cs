@@ -44,6 +44,8 @@ public class ScoreController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        scoreText.enabled = TimeController.isTimeStart;
+        magniText.enabled = TimeController.isTimeStart;
         //コンボ数取得
         float comboCount = (float)ComboController.ReturnCombo();
         //スコア倍率設定

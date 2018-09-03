@@ -29,6 +29,7 @@ public class TimeController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        timeText.enabled = isTimeStart;
         //時間表示
         timeText.text = "Time:" + gameTime.ToString("00.00");
         //時間処理が開始できるなら

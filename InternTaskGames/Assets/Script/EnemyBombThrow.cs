@@ -56,6 +56,7 @@ public class EnemyBombThrow : MonoBehaviour
             //爆弾生成
             GameObject bomb = Instantiate(originBomb, transform.position, Quaternion.identity);
             //爆弾投擲
+            angle = Random.Range(30, 60);
             BombThrow(bomb, angle,bomb.GetComponent<BombMove>().Grav.y);
             //壁の種類を伝える
             bomb.GetComponent<BombMove>().wallType = wallType;

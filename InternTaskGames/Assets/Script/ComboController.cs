@@ -25,6 +25,7 @@ public class ComboController : MonoBehaviour {
 	void Update () {
 		foreach(var cx in comboTexts)
         {
+            cx.enabled = TimeController.isTimeStart;
             //コンボ数が0以下なら
             if (comboCount <= 0)
                 //何も表示しない

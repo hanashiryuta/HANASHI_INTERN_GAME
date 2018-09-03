@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resultTextObj: {fileID: 643487584}
-  resultRankingObj: {fileID: 480391799}
+  resultRankingText: {fileID: 480391801}
 --- !u!82 &36845304
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1564,6 +1564,11 @@ Prefab:
       propertyPath: rayTransform
       value: 
       objectReference: {fileID: 1971440065}
+    - target: {fileID: 114311999517806040, guid: 200306f8a9ea75448bb7102f4e32733a,
+        type: 2}
+      propertyPath: depthScaleMultiplier
+      value: 0.03
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 200306f8a9ea75448bb7102f4e32733a, type: 2}
   m_IsPrefabParent: 0
