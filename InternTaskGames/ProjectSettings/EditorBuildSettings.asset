@@ -14,3 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/Result.unity
     guid: ee23942fa36c5454589238517e62673d
+  - enabled: 1
+    path: Assets/Scene/Looby.unity
+    guid: 56dd7ba630b2da34a8c9ee21d74ece34
+  - enabled: 1
+    path: Assets/Scene/VSMode.unity
+    guid: 511dd46c58202f8439c87009ff003203
