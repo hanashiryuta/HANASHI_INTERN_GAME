@@ -14,7 +14,7 @@ public class EnemyDeath : MonoBehaviour {
     public bool isDeath = false;
     //消滅までの時間
     public float deathTime = 5.0f;
-
+    //アニメーター
     public Animator anim;
 
     // Use this for initialization
@@ -29,8 +29,10 @@ public class EnemyDeath : MonoBehaviour {
         //消滅までの時間が0になったら（時間が来たら）
         if (deathTime <= 0)
         {
+            //アニメ時間取得
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0); // layerNo:Base Layer == 0 
 
+            //アニメ再生終了なら
             if (stateInfo.normalizedTime >= 1.0f)
             {
                 //オブジェクト消滅
@@ -47,6 +49,7 @@ public class EnemyDeath : MonoBehaviour {
             //爆弾の状態が返され中なら
             if (col.gameObject.GetComponent<BombMove>().bombState == BombState.RETURNMOVE)
             {
+                //アニメ再生
                 anim.SetTrigger("Death");
                 //スコア加算
                 ScoreController.ScoreAdd(100);

@@ -40,6 +40,7 @@ public class TimeController : MonoBehaviour {
         if(gameTime <= 0&&isTimeStart)
         {
             gameTime = 0;
+            //フェードアウト開始
             GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
         }
 	}

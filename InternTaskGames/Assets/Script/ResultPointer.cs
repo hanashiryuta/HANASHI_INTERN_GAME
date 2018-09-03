@@ -8,13 +8,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ResultPointer : MonoBehaviour {
-    
+public class ResultPointer : MonoBehaviour
+{
+    //クリックSE
+    public AudioClip clickSE;
+    //オーディオソース
+    AudioSource audioSource;
+
+    void Start()
+    {
+        //オーディオソース取得
+        audioSource = GetComponent<AudioSource>();
+    }
+
     /// <summary>
     /// タイトルに戻る
     /// </summary>
     public void TitleBackButton()
     {
+        //クリックSE再生
+        audioSource.PlayOneShot(clickSE);
+        //フェードアウト開始
         GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
     }
 
@@ -23,6 +37,9 @@ public class ResultPointer : MonoBehaviour {
     /// </summary>
     public void GameEndButton()
     {
+        //クリックSE再生
+        audioSource.PlayOneShot(clickSE);
+        //アプリケーション終了
         Application.Quit();
     }
 }

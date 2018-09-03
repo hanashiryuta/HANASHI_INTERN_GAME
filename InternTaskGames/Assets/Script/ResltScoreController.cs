@@ -18,8 +18,7 @@ public class ResltScoreController : MonoBehaviour {
     Text resultText;
     //スコア
     float score;
-
-    public GameObject resultRankingObj;
+    
     Text resultRankingText;
 
 	// Use this for initialization
@@ -30,14 +29,18 @@ public class ResltScoreController : MonoBehaviour {
         resultText = resultTextObj.GetComponent<Text>();
         //リザルトスコア表示
         resultText.text = "Score:" + score.ToString();
-        resultRankingText = resultRankingObj.GetComponent<Text>();
+        //ランキング取得
         string Ranking = PlayerPrefs.GetString("Ranking");
+        //配列か
         string[] rankString = Ranking.Split(',');
+        //ランキング用文字列
         string rank = "";
+        //ランキング格納
         foreach(var cx in rankString)
         {
             rank += cx + "\n";
         }
+        //ランキング表示
         resultRankingText.text = rank;
     }
 }

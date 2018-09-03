@@ -9,11 +9,24 @@ using UnityEngine;
 
 public class RacketController : MonoBehaviour {
 
+    //跳ね返しSE
+    public AudioClip sieldSE;
+    //オーディオソース
+    AudioSource audioSource;
+
+    void Start()
+    {
+        //オーディオソース取得
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void OnCollisionEnter(Collision col)
     {
         //爆弾に当たったら
         if (col.gameObject.CompareTag("Bomb"))
         {
+            //SE再生
+            audioSource.PlayOneShot(sieldSE);
             //スコア加算
             ScoreController.ScoreAdd(100);
             //コンボ加算

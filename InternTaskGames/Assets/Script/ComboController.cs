@@ -12,21 +12,13 @@ public class ComboController : MonoBehaviour {
 
     //コンボ数
     public static int comboCount;
-    //コンボ数表示オブジェクト
-    public GameObject[] textObjs;
     //コンボ数表示テキスト
-    Text[] comboTexts;
+    public Text[] comboTexts;
 
 	// Use this for initialization
 	void Start () {
         //コンボ数初期化
         ComboInit();
-        //コンボ数表示テキスト取得
-        comboTexts = new Text[textObjs.Length];
-        for (int i = 0; i < textObjs.Length; i++)
-        {
-            comboTexts[i] = textObjs[i].GetComponent<Text>();
-        }
 	}
 	
 	// Update is called once per frame

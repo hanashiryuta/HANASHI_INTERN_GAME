@@ -34,6 +34,7 @@ public class ScoreController : MonoBehaviour {
         scoreMagni = 1;
         //スコア倍率表示テキスト取得
         magniText = magniTextObj.GetComponent<Text>();
+        //ランキングがなければ初期化
         if (!PlayerPrefs.HasKey("Ranking"))
         {
             PlayerPrefs.SetString("Ranking","0,0,0,0,0,0,0,0,0,0");
@@ -57,11 +58,7 @@ public class ScoreController : MonoBehaviour {
         else
             //スコア倍率表示
             magniText.text = "×" + scoreMagni.ToString("F1");
-
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            score += 20000;
-        }
+        
 	}
 
     /// <summary>
@@ -92,17 +89,19 @@ public class ScoreController : MonoBehaviour {
         return scoreMagni;
     }
 
+    /// <summary>
+    /// ハイスコア保存クラス
+    /// </summary>
     public static void SavedHighScore()
     {
+        //ランキング取得
         string Ranking = PlayerPrefs.GetString("Ranking");
+        //配列作成
         string[] rankString = Ranking.Split(',');
+        //floatリスト作成
         List<float> ranking = new List<float>();
-        if(rankString.Length <10)
-        {
-            rankString = new string[10]
-                {"0","0","0","0","0","0","0","0","0","0"};
-        }
 
+        //数値化ランキング格納
         foreach (var cx in rankString)
         {
             try {
@@ -114,25 +113,35 @@ public class ScoreController : MonoBehaviour {
             }
         }
 
+        //現在のスコア保存
         float charenger = score;
+        //ランキングと順次比較
         for(int i = 0;i<ranking.Count;i++)
         {
+            //リストからひとつ取り出す
             float ranker = ranking[i];
+            //取り出したものより保存しているものが大きければ
             if(ranker < charenger)
             {
+                //ランキング更新
                 float change = ranker;
                 ranker = charenger;
                 charenger = change;
             }
+            //リストに戻す
             ranking[i] = ranker;
         }
 
+        //保存用文字列
         string setRanking = "";
+        //ランキング文字列化
         for (int i = 0; i < ranking.Count-1; i++)
         {
             setRanking += ranking[i].ToString()+ ",";
         }
+        //最後は’、’を含まない
         setRanking += ranking[ranking.Count-1].ToString();
+        //ランキング更新
         PlayerPrefs.DeleteKey("Ranking");
         PlayerPrefs.SetString("Ranking", setRanking);
     }

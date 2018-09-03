@@ -14,6 +14,9 @@ public class RacketRangePointer : MonoBehaviour {
     //レイヤー
     public LayerMask layerMask;
 
+    float racketRange = 10;
+    public List<GameObject> racketRangeWalls;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -36,7 +39,13 @@ public class RacketRangePointer : MonoBehaviour {
         float angle = Mathf.Atan2(racket.transform.position.z - transform.position.z, racket.transform.position.x - transform.position.x) * 180/Mathf.PI;
 
         //ラケットを回転
-        racket.transform.rotation = Quaternion.Euler(0, -angle+90, 0);
+        racket.transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
 
+        foreach(var cx in racketRangeWalls)
+        {
+            cx.transform.localPosition = new Vector3(cx.transform.position.x, cx.transform.position.y, racketRange);
+
+            cx.transform.localScale = new Vector3(racketRange, cx.transform.localScale.y, cx.transform.localScale.z);
+        }
 	}
 }

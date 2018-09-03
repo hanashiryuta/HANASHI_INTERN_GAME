@@ -86,6 +86,10 @@ public class OVRGazePointer : MonoBehaviour {
     private OVRProgressIndicator progressIndicator;
 
     private static OVRGazePointer _instance;
+
+    public AudioClip selectSE;
+    AudioSource audioSource;
+
     public static OVRGazePointer instance 
     { 
         // If there's no GazePointer already in the scene, instanciate one now.
@@ -164,6 +168,8 @@ public class OVRGazePointer : MonoBehaviour {
 
 		gazeIcon = transform.Find("GazeIcon");
         progressIndicator = transform.GetComponent<OVRProgressIndicator>();
+
+        audioSource = GetComponent<AudioSource>();
     }
     
     void Update () 
@@ -283,6 +289,8 @@ public class OVRGazePointer : MonoBehaviour {
         }
         if (GetComponent<Renderer>())
             GetComponent<Renderer>().enabled = true;
+        if (hidden)
+            audioSource.PlayOneShot(selectSE);
         hidden = false;
     }
 

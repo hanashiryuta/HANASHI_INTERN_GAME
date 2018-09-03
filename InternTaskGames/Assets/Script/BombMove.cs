@@ -46,9 +46,10 @@ public class BombMove : MonoBehaviour {
     WallController wallController;
     //消滅までの時間
     public float deathTime = 5.0f;
-
-
+    //爆発パーティクル
     public GameObject explosionParticle;
+    //爆発SEオブジェクト
+    public GameObject explosionSE;
 
     // Use this for initialization
     void Start () {
@@ -58,6 +59,7 @@ public class BombMove : MonoBehaviour {
         wallPoint = wallController.wallPoint;
         //リジッドボディ取得
         rigid = GetComponent<Rigidbody>();
+        //壁管理クラスに自信を保存
         wallController.AddBombs(this.gameObject,wallType);
 	}
 
@@ -68,6 +70,7 @@ public class BombMove : MonoBehaviour {
         {
             //通常状態
             case BombState.NORMAL:
+                //ランダム回転しながら飛んでいく
                 transform.Rotate(new Vector3(Random.Range(0, 180),
                                              Random.Range(0, 180),
                                              Random.Range(0, 180)
@@ -104,6 +107,7 @@ public class BombMove : MonoBehaviour {
 
             //返され中
             case BombState.RETURNMOVE:
+                //ランダム回転
                 transform.Rotate(new Vector3(Random.Range(0, 180),
                                              Random.Range(0, 180),
                                              Random.Range(0, 180)
@@ -113,8 +117,13 @@ public class BombMove : MonoBehaviour {
                 break;
 
             case BombState.DEATH:
+                //爆発SEオブジェクト生成
+                Instantiate(explosionSE, transform.position, Quaternion.identity);
+                //爆発パーティクル生成
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                //壁管理クラスから自信を除外
                 wallController.RemoveBombs(this.gameObject,wallType);
+                //オブジェクト消滅
                 Destroy(gameObject);
                 break;
         }

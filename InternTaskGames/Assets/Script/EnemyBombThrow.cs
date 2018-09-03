@@ -22,28 +22,36 @@ public class EnemyBombThrow : MonoBehaviour
     //ターゲットオブジェクト
     GameObject targetObject;
     public float angle = 30;
-
+    //爆弾を投げれるかどうか
     public static bool isThrow;
-
+    //アニメーター
     public Animator anim;
+    //投擲時SE
+    public AudioClip throwSE;
+    //オーディオソース
+    AudioSource audioSource;
     
 	// Use this for initialization
 	void Start () {
+        //投げられない状態
         isThrow = false;
         //クラス取得
         enemyDeath = GetComponent<EnemyDeath>();
         //ターゲット検索
         targetObject = GameObject.FindGameObjectWithTag("MainCamera");
+        //オーディオソース取得
+        audioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-            //射出までの時間を減らしていく
-            throwTime -= Time.deltaTime;
+        //射出までの時間を減らしていく
+        throwTime -= Time.deltaTime;
         //射出までの時間が0になったら（時間が来たら）、かつ
         //エネミーが消滅状態でなければ
         if(throwTime <= 0&&!enemyDeath.isDeath)
         {
+            //アニメ再生
             anim.SetTrigger("Throw");
             //爆弾生成
             GameObject bomb = Instantiate(originBomb, transform.position, Quaternion.identity);
@@ -85,6 +93,9 @@ public class EnemyBombThrow : MonoBehaviour
         
         //射出
         bomb.GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
+
+        //SE再生
+        audioSource.PlayOneShot(throwSE);
     }
 
     /// <summary>
