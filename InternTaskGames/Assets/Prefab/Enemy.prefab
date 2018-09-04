@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 114004910158513000}
   - component: {fileID: 65474067679980954}
   - component: {fileID: 82099997697553266}
+  - component: {fileID: 114615835807499698}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -921,6 +922,38 @@ MonoBehaviour:
   angle: 30
   anim: {fileID: 95013783395373130}
   throwSE: {fileID: 8300000, guid: bc2ded4db228ef349badec34d9f362c5, type: 3}
+--- !u!114 &114615835807499698
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1664177999866586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 223
+    i1: 196
+    i2: 75
+    i3: 195
+    i4: 105
+    i5: 6
+    i6: 124
+    i7: 20
+    i8: 234
+    i9: 128
+    i10: 62
+    i11: 7
+    i12: 137
+    i13: 140
+    i14: 219
+    i15: 30
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!137 &137146622695435646
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

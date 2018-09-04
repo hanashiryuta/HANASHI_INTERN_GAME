@@ -15,14 +15,16 @@ public class RacketRangePointer : MonoBehaviour {
     public LayerMask layerMask;
 
     float racketRange = 10;
-    public List<GameObject> racketRangeWalls;
+    GameObject[] racketRangeWalls;
+    [HideInInspector]
+    bool isMulti;
 
     float currentRacketRange;
     float previousRacketRange;
 
 	// Use this for initialization
 	void Start () {
-		
+        racketRangeWalls = GameObject.FindGameObjectsWithTag("RacketMoveRange");
 	}
 	
 	// Update is called once per frame
@@ -50,6 +52,7 @@ public class RacketRangePointer : MonoBehaviour {
         {
             cx.transform.localPosition = new Vector3(cx.transform.localPosition.x, cx.transform.localPosition.y, racketRange);
 
+            if(!isMulti)
             cx.transform.localScale = new Vector3(racketRange, cx.transform.localScale.y, cx.transform.localScale.z);
         }
 
@@ -59,16 +62,31 @@ public class RacketRangePointer : MonoBehaviour {
     void RacketRangeSet()
     {
         previousRacketRange = OVRInput.Get(OVRInput.Axis2D.PrimaryTouchpad).y;
-
-        if (previousRacketRange > currentRacketRange)
+        if(!isMulti)
         {
-            if (racketRange < 20)
-                racketRange++;
+            if (previousRacketRange > currentRacketRange)
+            {
+                if (racketRange < 20)
+                    racketRange++;
+            }
+            else if (previousRacketRange < currentRacketRange)
+            {
+                if (racketRange > 5)
+                    racketRange--;
+            }
         }
-        else if(previousRacketRange < currentRacketRange)
+        else
         {
-            if (racketRange > 5)
-                racketRange--;
+            if (previousRacketRange > currentRacketRange)
+            {
+                if (racketRange < 1)
+                    racketRange--;
+            }
+            else if (previousRacketRange < currentRacketRange)
+            {
+                if (racketRange > 27)
+                    racketRange++;
+            }
         }
     }
 }

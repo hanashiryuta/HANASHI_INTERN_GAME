@@ -43,4 +43,13 @@ public class TitlePointer : MonoBehaviour {
         //アプリケーション終了
         Application.Quit();
     }
+
+    public void MultiLobbyButton()
+    {
+        //クリックSE再生
+        audioSource.PlayOneShot(clickSE);
+        GameObject.Find("Fade").GetComponent<FadeController>().nextScene = "Lobby";
+        //フェードアウト開始
+        GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
+    }
 }

@@ -10,6 +10,7 @@ TagManager:
   - LEFTWALL
   - FRONTWALL
   - RIGHTWALL
+  - RacketMoveRange
   layers:
   - Default
   - TransparentFX

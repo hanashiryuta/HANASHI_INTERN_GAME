@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114551713778008678}
   - component: {fileID: 65642666134610366}
   - component: {fileID: 82487318478114228}
+  - component: {fileID: 114487845536904364}
   m_Layer: 0
   m_Name: Racket
   m_TagString: Untagged
@@ -224,6 +225,38 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114487845536904364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1205012581171178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 87
+    i1: 227
+    i2: 203
+    i3: 156
+    i4: 40
+    i5: 38
+    i6: 48
+    i7: 52
+    i8: 232
+    i9: 65
+    i10: 56
+    i11: 75
+    i12: 48
+    i13: 43
+    i14: 150
+    i15: 198
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114551713778008678
 MonoBehaviour:
   m_ObjectHideFlags: 1
