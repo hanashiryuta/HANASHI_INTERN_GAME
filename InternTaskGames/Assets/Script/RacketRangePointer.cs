@@ -23,12 +23,24 @@ public class RacketRangePointer : NetworkBehaviour {
     float currentRacketRange;
     float previousRacketRange;
 
+    public string[] falseObjectName;
+
+    void Start()
+    {
+        if (!isLocalPlayer)
+        {
+            foreach(var cx in falseObjectName)
+            {
+                transform.Find(cx).gameObject.SetActive(false);
+            }
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
         if (isLocalPlayer)
         {
-            CmdRacketRangeSet();
+            RacketRangeSet();
             //コントローラからレイを飛ばす
             Ray pointer = new Ray(controller.transform.position, controller.transform.forward);
 
@@ -36,20 +48,20 @@ public class RacketRangePointer : NetworkBehaviour {
             //レイが指定したレイヤーを持つオブジェクトに当たったら
             if (Physics.Raycast(pointer, out hit, 100, layerMask))
             {
-                CmdMoveRacket(hit.point);
+                //その位置にラケット配置
+                racket.transform.position = hit.point;
+                //当たった位置との角度計算
+                float angle = Mathf.Atan2(racket.transform.position.z - controller.transform.position.z, racket.transform.position.x - controller.transform.position.x) * 180 / Mathf.PI;
+                //ラケットを回転
+                racket.transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
+                CmdMoveRacket(racket.transform.position,racket.transform.rotation);
             }
         }
 	}
 
     [Command]
-    void CmdMoveRacket(Vector3 position)
+    void CmdMoveRacket(Vector3 racketPosition,Quaternion racketRotation)
     {
-        //その位置にラケット配置
-        racket.transform.position = position;
-        //当たった位置との角度計算
-        float angle = Mathf.Atan2(racket.transform.position.z - controller.transform.position.z, racket.transform.position.x - controller.transform.position.x) * 180 / Mathf.PI;
-        //ラケットを回転
-        racket.transform.rotation = Quaternion.Euler(0, -angle + 90, 0);
         foreach(var conn in NetworkServer.connections)
         {
             if (conn == null || !conn.isReady)
@@ -57,7 +69,7 @@ public class RacketRangePointer : NetworkBehaviour {
             if (conn == connectionToClient)
                 continue;
 
-            TargetSyncTransform(conn, racket.transform.position, racket.transform.rotation);
+            TargetSyncTransform(conn, racketPosition, racketRotation);
         }
 
     }
@@ -67,9 +79,8 @@ public class RacketRangePointer : NetworkBehaviour {
     {
         racket.transform.SetPositionAndRotation(position, rotation);
     }
-
-    [Command]
-    void CmdRacketRangeSet()
+    
+    void RacketRangeSet()
     {
         previousRacketRange = OVRInput.Get(OVRInput.Axis2D.PrimaryTouchpad).y;
         if (previousRacketRange > currentRacketRange)
