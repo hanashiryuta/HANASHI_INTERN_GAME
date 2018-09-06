@@ -17,66 +17,53 @@ public class EnemyBombThrow : NetworkBehaviour
     EnemyDeath enemyDeath;
     //ターゲットオブジェクト
     GameObject targetObject;
-    //public float angle = 30;
-    //爆弾を投げれるかどうか
-    //public static bool isThrow;
     //アニメーター
     public Animator anim;
     //投擲時SE
     public AudioClip throwSE;
     //オーディオソース
     AudioSource audioSource;
-
+    //カウントダウンクラス
     CountDownController countDownController;
+    //フェードクラス
     FadeController fadeController;
+
     // Use this for initialization
     void Start()
     {
-        if (IsNetwork.isNetConnect)
-            OnlineInitialize();
-        else
-            OfflineInitialize();
+        //クラス取得
+        enemyDeath = GetComponent<EnemyDeath>();
+        //ターゲット検索
+        targetObject = GameObject.FindGameObjectWithTag("MainCamera");
+        //オーディオソース取得
+        audioSource = GetComponent<AudioSource>();
+        //フェードクラス取得
+        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
+
+        //オフラインなら
+        if (!IsNetwork.isOnline)
+            //カウントダウンクラス取得
+            countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsNetwork.isNetConnect)
+        //オンラインとオフラインとで動作を変える
+        if (IsNetwork.isOnline)
             OnlineUpdate();
         else
             OfflineUpdate();
 
     }
 
-    void OnlineInitialize()
-    {
-        //投げられない状態
-        //isThrow = true;
-        //クラス取得
-        enemyDeath = GetComponent<EnemyDeath>();
-        //ターゲット検索
-        targetObject = GameObject.FindGameObjectWithTag("MainCamera");
-        //オーディオソース取得
-        audioSource = GetComponent<AudioSource>();
-        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
-    }
-    void OfflineInitialize()
-    {
-        //投げられない状態
-        //isThrow = true;
-        //クラス取得
-        enemyDeath = GetComponent<EnemyDeath>();
-        //ターゲット検索
-        targetObject = GameObject.FindGameObjectWithTag("MainCamera");
-        //オーディオソース取得
-        audioSource = GetComponent<AudioSource>();
-        countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
-        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
-    }
-
+    /// <summary>
+    /// オンライン時のアップデート
+    /// </summary>
     [ServerCallback]
     void OnlineUpdate()
     {
+        //フェードが終了状態でなければ
         if (!fadeController.isSceneEnd)
         {
             //射出までの時間を減らしていく
@@ -84,31 +71,19 @@ public class EnemyBombThrow : NetworkBehaviour
             //射出までの時間が0になったら（時間が来たら）、かつ
             //エネミーが消滅状態でなければ
             if (throwTime <= 0 && !enemyDeath.isDeath)
-            {
-                //アニメ再生
-                anim.SetTrigger("Throw");
-                audioSource.PlayOneShot(throwSE);
-                //爆弾生成
-                GameObject bomb = Instantiate(originBomb, transform.position, Quaternion.identity);
-                //爆弾投擲
-                //angle = Random.Range(30, 60);
-                //BombThrow(bomb, angle,bomb.GetComponent<BombMove>().Grav.y);
-                //壁の種類を伝える
-                bomb.GetComponent<BombMove>().wallType = wallType;
-                //自身を渡す
-                //bomb.GetComponent<BombMove>().enemy = this.gameObject;
-                bomb.GetComponent<BombMove>().originObject = this.gameObject;
-                bomb.GetComponent<BombMove>().targetObject = targetObject;
-                bomb.GetComponent<BombMove>().bombState = BombState.RETURNSET;
-                NetworkServer.Spawn(bomb);
-                //エネミー消滅状態に
-                throwTime = 10;
-                //enemyDeath.isDeath = true;
+            {                
+                //サーバーでエネミースポーン
+                NetworkServer.Spawn(BombThrow());
             }
         }
     }
+
+    /// <summary>
+    /// オフライン時のアップデート
+    /// </summary>
     void OfflineUpdate()
     {
+        //カウントダウンが終了しており、フェードがシーン終了状態でなければ
         if (countDownController.countDownState == CountDownState.END&&!fadeController.isSceneEnd)
         {
             //射出までの時間を減らしていく
@@ -117,26 +92,36 @@ public class EnemyBombThrow : NetworkBehaviour
             //エネミーが消滅状態でなければ
             if (throwTime <= 0 && !enemyDeath.isDeath)
             {
-                //アニメ再生
-                anim.SetTrigger("Throw");
-                audioSource.PlayOneShot(throwSE);
-                //爆弾生成
-                GameObject bomb = Instantiate(originBomb, transform.position, Quaternion.identity);
-                //NetworkServer.Spawn(bomb);
                 //爆弾投擲
-                //angle = Random.Range(30, 60);
-                //BombThrow(bomb, angle,bomb.GetComponent<BombMove>().Grav.y);
-                //壁の種類を伝える
-                bomb.GetComponent<BombMove>().wallType = wallType;
-                //自身を渡す
-                //bomb.GetComponent<BombMove>().enemy = this.gameObject;
-                bomb.GetComponent<BombMove>().originObject = this.gameObject;
-                bomb.GetComponent<BombMove>().targetObject = targetObject;
-                bomb.GetComponent<BombMove>().bombState = BombState.RETURNSET;
-                //エネミー消滅状態に
-                //throwTime = 10;
+                BombThrow();
+                //死亡可能状態へ
                 enemyDeath.isDeath = true;
             }
         }
+    }
+
+    /// <summary>
+    /// 爆弾投擲
+    /// </summary>
+    /// <returns></returns>
+    GameObject BombThrow()
+    {         
+        //アニメ再生
+        anim.SetTrigger("Throw");
+        //SE再生
+        audioSource.PlayOneShot(throwSE);
+        //爆弾生成
+        GameObject bomb = Instantiate(originBomb, transform.position, Quaternion.identity);
+        //壁の種類を伝える
+        bomb.GetComponent<BombMove>().wallType = wallType;
+        //自身を渡す
+        bomb.GetComponent<BombMove>().originObject = this.gameObject;
+        //ターゲットを渡す
+        bomb.GetComponent<BombMove>().targetObject = targetObject;
+        //爆弾の状態を遷移
+        bomb.GetComponent<BombMove>().bombState = BombState.THROWSET;
+        //エネミー消滅状態に
+        throwTime = 10;
+        return bomb;
     }
 }

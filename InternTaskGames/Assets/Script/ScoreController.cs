@@ -23,8 +23,11 @@ public class ScoreController : MonoBehaviour {
     public GameObject magniTextObj;
     //スコア倍率表示テキスト
     Text magniText;
+    //カウントダウンクラス
     CountDownController countDownController;
+    //フェードクラス
     FadeController fadeController;
+    //ハイスコアが保存できるかどうか
     bool isHighScoreSet;
 
     // Use this for initialization
@@ -42,16 +45,21 @@ public class ScoreController : MonoBehaviour {
         {
             PlayerPrefs.SetString("Ranking","0,0,0,0,0,0,0,0,0,0");
         }
+        //カウントダウンクラス取得
         countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
+        //フェードクラス取得
         fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        //カウントダウンが終わっていたら
         if (countDownController.countDownState == CountDownState.END)
         {
+            //表示
             scoreText.enabled = true;
+            //表示
             magniText.enabled = true;
             //コンボ数取得
             float comboCount = (float)ComboController.ReturnCombo();
@@ -70,11 +78,15 @@ public class ScoreController : MonoBehaviour {
         }
         else
         {
+            //非表示
             scoreText.enabled = false;
+            //非表示
             magniText.enabled = false;
         }
+        //フェードが終了状態なら
         if(fadeController.isSceneEnd)
         {
+            //ハイスコアセーブ
             SavedHighScore();
         }
 	}

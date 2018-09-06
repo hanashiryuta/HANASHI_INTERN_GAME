@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿///
+///製作日：2018/09/06
+///作成者：葉梨竜太
+///エネミー生成処理クラス
+///
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -28,103 +33,116 @@ public class EnemySpawnController : NetworkBehaviour
     public int maxTimeRange = 8;
     //壁の種類
     public WallType wallType;
-    //スポーンできるかどうか
-    //public static bool isSpawn;
+    //カウントダウンクラス
     CountDownController countDownController;
+    //フェードクラス
     FadeController fadeController;
 
     // Use this for initialization
-    void Start () {
-        if (IsNetwork.isNetConnect)
-            OnlineInitialize();
-        else
-            OfflineInitialize();
-	}
+    void Start ()
+    {
+        //スポーン時間設定
+        spawnTime = Random.Range(minTimeRange, maxTimeRange);
+
+        //オフラインなら
+        if (!IsNetwork.isOnline)
+        {
+            //カウントダウンクラス取得
+            countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (IsNetwork.isNetConnect)
+        //フェードを取得できていなければ
+        if (fadeController == null)
+        {
+            //フェード取得
+            fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
+            return;
+        }
+
+        //オンラインかオフラインかで動作を変える
+        if (IsNetwork.isOnline)
             OnlineUpdate();
         else
             OfflineUpdate();
 
     }
-
-    void OnlineInitialize()
-    {
-        //初期化
-        //isSpawn = false;
-        //スポーン時間設定
-        spawnTime = Random.Range(minTimeRange, maxTimeRange);
-        //countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
-    }
-    void OfflineInitialize()
-    {
-        //初期化
-        //isSpawn = false;
-        //スポーン時間設定
-        spawnTime = Random.Range(minTimeRange, maxTimeRange);
-        countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
-        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
-    }
-
+    
+    /// <summary>
+    /// オンライン時のアップデート
+    /// </summary>
     void OnlineUpdate()
     {
-        if (fadeController == null)
-        {
-            fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
-            return;
-        }
+        //フェードが終了状態でなければ
         if (!fadeController.isSceneEnd)
         {
             //スポーン時間を減らす
             spawnTime -= Time.deltaTime;
-            //スポーン時間が0以下になったら（時間が来たら）
-            if (spawnTime <= 0)
-            {
-                //スポーンポイント設定
-                nowSpawnPoint = Random.Range(0, spawnPoints.Length);
-                //そのスポーンポイントにエネミーがいなければ
-                if (spawnPoints[nowSpawnPoint].transform.childCount <= 0)
-                {
-                    //エネミー生成
-                    GameObject enemy = Instantiate(originEnemy);
-                    enemy.transform.position = spawnPoints[nowSpawnPoint].transform.position;
-                    //エネミーに壁の種類を渡す
-                    enemy.GetComponent<EnemyBombThrow>().wallType = wallType;
-                    NetworkServer.Spawn(enemy);
-                    //スポーン時間再設定
-                    spawnTime = Random.Range(minTimeRange, maxTimeRange);
-                }
-            }
+            //生成できるなら
+            if (isSpawnCheck())
+                //サーバーで生成
+                NetworkServer.Spawn(EnemySpawn());
         }
     }
+
+    /// <summary>
+    /// オフライン時のアップデート
+    /// </summary>
     void OfflineUpdate()
     {
-        if (countDownController.countDownState == CountDownState.END&&!fadeController.isSceneEnd)
+        //カウントダウンが終了し、フェードが終了状態でなければ
+        if (countDownController.countDownState == CountDownState.END && !fadeController.isSceneEnd)
         {
             //スポーン時間を減らす
             spawnTime -= Time.deltaTime;
-            //スポーン時間が0以下になったら（時間が来たら）
-            if (spawnTime <= 0)
+            //生成できるなら
+            if (isSpawnCheck())
+                //エネミー生成
+                EnemySpawn();
+        }
+    }    
+
+    /// <summary>
+    /// 生成できるかどうか
+    /// </summary>
+    /// <returns></returns>
+    bool isSpawnCheck()
+    { 
+        //スポーン時間が0以下になったら（時間が来たら）
+        if (spawnTime <= 0)
+        {
+            //スポーンポイント設定
+            nowSpawnPoint = Random.Range(0, spawnPoints.Length);
+            //そのスポーンポイントにエネミーがいなければ
+            if (spawnPoints[nowSpawnPoint].transform.childCount <= 0)
             {
-                //スポーンポイント設定
-                nowSpawnPoint = Random.Range(0, spawnPoints.Length);
-                //そのスポーンポイントにエネミーがいなければ
-                if (spawnPoints[nowSpawnPoint].transform.childCount <= 0)
-                {
-                    //エネミー生成
-                    GameObject enemy = Instantiate(originEnemy);
-                    enemy.transform.position = spawnPoints[nowSpawnPoint].transform.position;
-                    enemy.transform.parent = spawnPoints[nowSpawnPoint].transform;
-                    //エネミーに壁の種類を渡す
-                    enemy.GetComponent<EnemyBombThrow>().wallType = wallType;
-                    //NetworkServer.Spawn(enemy);
-                    //スポーン時間再設定
-                    spawnTime = Random.Range(minTimeRange, maxTimeRange);
-                }
+                //生成できる
+                return true;
             }
         }
+        //生成できない
+        return false;
+    }
+
+    /// <summary>
+    /// 敵出現処理
+    /// </summary>
+    /// <returns></returns>
+    GameObject EnemySpawn()
+    {
+        //エネミー生成
+        GameObject enemy = Instantiate(originEnemy);
+        //位置設定
+        enemy.transform.position = spawnPoints[nowSpawnPoint].transform.position;
+        //親オブジェクト指定
+        enemy.transform.parent = spawnPoints[nowSpawnPoint].transform;
+        //エネミーに壁の種類を渡す
+        enemy.GetComponent<EnemyBombThrow>().wallType = wallType;
+        //スポーン時間再設定
+        spawnTime = Random.Range(minTimeRange, maxTimeRange);
+        return enemy;
     }
 }

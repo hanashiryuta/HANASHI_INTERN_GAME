@@ -17,22 +17,23 @@ public class TimeController : MonoBehaviour {
     Text timeText;
     //ゲーム時間
     public float gameTime = 60.00f;
-    //時間処理開始するか
-    //public static bool isTimeStart;
+    //カウントダウンクラス
     CountDownController countDownController;
 
 	// Use this for initialization
 	void Start () {
-        //isTimeStart = false;
         //時間表示テキスト取得
         timeText = timeTextObj.GetComponent<Text>();
+        //カウントダウンクラス取得
         countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        //カウントダウンが終わっているならば
         if (countDownController.countDownState == CountDownState.END)
         {
+            //表示
             timeText.enabled = true;
             //時間表示
             timeText.text = "Time:" + gameTime.ToString("00.00");
@@ -51,6 +52,7 @@ public class TimeController : MonoBehaviour {
         }
         else
         {
+            //非表示
             timeText.enabled = false;
         }
 	}

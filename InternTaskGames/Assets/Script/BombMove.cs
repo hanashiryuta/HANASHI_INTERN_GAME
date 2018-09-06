@@ -1,16 +1,22 @@
-﻿using System.Collections;
+﻿///
+///製作日：2018/09/05
+///作成者：葉梨竜太
+///爆弾移動クラス
+///
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+
 /// <summary>
 /// 爆弾の状態
 /// </summary>
 public enum BombState
 {
     NORMAL,//通常状態
-    RETURNSET,//返され始め
-    RETURNMOVE,//返され中
-    DEATH
+    THROWSET,//投げ始め
+    STRAIGHT,//直線
+    DEATH//死亡状態
 }
 
 public class BombMove : NetworkBehaviour
@@ -45,47 +51,34 @@ public class BombMove : NetworkBehaviour
     public GameObject explosionParticle;
     //爆発SEオブジェクト
     public GameObject explosionSE;
-
+    //射出角度
     float angle = 0;
 
     // Use this for initialization
     void Start()
     {
-        if (IsNetwork.isNetConnect)
-            OnlineInitialize();
-        else
-            OfflineInitialize();
+        //壁管理クラス取得
+        wallController = GameObject.Find("Walls").GetComponent<WallController>();
+        //リジッドボディ取得
+        rigid = GetComponent<Rigidbody>();
+        //壁管理クラスに自身を保存
+        wallController.CmdAddBombs(this.gameObject, wallType);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsNetwork.isNetConnect)
+        //オンラインかオフラインで対応を変える
+        if (IsNetwork.isOnline)
             OnlineUpdate();
         else
             OfflineUpdate();
 
     }
 
-    void OnlineInitialize()
-    {
-        //壁管理クラス取得
-        wallController = GameObject.Find("Walls").GetComponent<WallController>();
-        //リジッドボディ取得
-        rigid = GetComponent<Rigidbody>();
-        //壁管理クラスに自身を保存
-        wallController.CmdAddBombs(this.gameObject, wallType);
-    }
-    void OfflineInitialize()
-    {
-        //壁管理クラス取得
-        wallController = GameObject.Find("Walls").GetComponent<WallController>();
-        //リジッドボディ取得
-        rigid = GetComponent<Rigidbody>();
-        //壁管理クラスに自身を保存
-        wallController.CmdAddBombs(this.gameObject, wallType);
-    }
-
+    /// <summary>
+    /// オンライン時のアップデート
+    /// </summary>
     [ServerCallback]
     void OnlineUpdate()
     {
@@ -94,42 +87,33 @@ public class BombMove : NetworkBehaviour
         {
             //通常状態
             case BombState.NORMAL:
-                //ランダム回転しながら飛んでいく
-                transform.Rotate(new Vector3(Random.Range(0, 180),
-                                             Random.Range(0, 180),
-                                             Random.Range(0, 180)
-                                            ) * Time.deltaTime);
-                //自分で設定した重力を加える
-                rigid.AddForce(-Grav, ForceMode.Acceleration);
-
-                deathTime -= Time.deltaTime;
-                //消滅までの時間が0になったら（時間が来たら）
-                if (deathTime <= 0)
-                {
-                    //オブジェクト消滅状態に
-                    bombState = BombState.DEATH;
-                }
+                //通常動作
+                BombNormal();
+                //サーバーに位置情報送信
                 CmdMoveBomb(transform.position);
                 break;
 
-            //返され始め
-            case BombState.RETURNSET:
+            //投げ始め
+            case BombState.THROWSET:
                 //移動量を0にする
                 rigid.velocity = Vector3.zero;
-                BombThrow(targetObject);
-                break;                
+                //爆弾投擲
+                BombFly(targetObject);
+                break; 
+                
+            //死亡時               
             case BombState.DEATH:
-                //爆発SEオブジェクト生成
-                Instantiate(explosionSE, transform.position, Quaternion.identity);
-                //爆発パーティクル生成
-                Instantiate(explosionParticle, transform.position, Quaternion.identity);
-                //壁管理クラスから自身を除外
-                wallController.CmdRemoveBombs(this.gameObject, wallType);
-                //オブジェクト消滅
+                //爆弾死亡処理
+                BombDeath();
+                //オンライン上でのオブジェクト消滅
                 NetworkServer.Destroy(gameObject);
                 break;
         }
     }
+
+    /// <summary>
+    /// オフライン上でのアップデート
+    /// </summary>
     void OfflineUpdate()
     {
         //自身の状態によって行動が変化する
@@ -137,31 +121,18 @@ public class BombMove : NetworkBehaviour
         {
             //通常状態
             case BombState.NORMAL:
-                //ランダム回転しながら飛んでいく
-                transform.Rotate(new Vector3(Random.Range(0, 180),
-                                             Random.Range(0, 180),
-                                             Random.Range(0, 180)
-                                            ) * Time.deltaTime);
-                //自分で設定した重力を加える
-                rigid.AddForce(-Grav, ForceMode.Acceleration);
-
-                deathTime -= Time.deltaTime;
-                //消滅までの時間が0になったら（時間が来たら）
-                if (deathTime <= 0)
-                {
-                    //オブジェクト消滅状態に
-                    bombState = BombState.DEATH;
-                }
+                //通常動作
+                BombNormal();
                 break;
 
-            //返され始め
-            case BombState.RETURNSET:
+            //投げ始め
+            case BombState.THROWSET:
                 //移動量を0にする
-                BombThrow(targetObject);
+                BombFly(targetObject);
                 break;
 
-                //返され中
-            case BombState.RETURNMOVE:
+            //直線
+            case BombState.STRAIGHT:
                 //ランダム回転
                 transform.Rotate(new Vector3(Random.Range(0, 180),
                                              Random.Range(0, 180),
@@ -171,32 +142,77 @@ public class BombMove : NetworkBehaviour
                 transform.position += velocity * 0.5f;
                 break;
 
+            //死亡時
             case BombState.DEATH:
-                //爆発SEオブジェクト生成
-                Instantiate(explosionSE, transform.position, Quaternion.identity);
-                //爆発パーティクル生成
-                Instantiate(explosionParticle, transform.position, Quaternion.identity);
-                //壁管理クラスから自身を除外
-                wallController.CmdRemoveBombs(this.gameObject, wallType);
+                //爆弾死亡処理
+                BombDeath();
                 //オブジェクト消滅
                 Destroy(gameObject);
                 break;
         }
     }
+
+    /// <summary>
+    /// 通常動作
+    /// </summary>
+    void BombNormal()
+    {
+        //ランダム回転しながら飛んでいく
+        transform.Rotate(new Vector3(Random.Range(0, 180),
+                                     Random.Range(0, 180),
+                                     Random.Range(0, 180)
+                                    ) * Time.deltaTime);
+        //自分で設定した重力を加える
+        rigid.AddForce(-Grav, ForceMode.Acceleration);
+
+        deathTime -= Time.deltaTime;
+        //消滅までの時間が0になったら（時間が来たら）
+        if (deathTime <= 0)
+        {
+            //オブジェクト消滅状態に
+            bombState = BombState.DEATH;
+        }
+    }
+
+    /// <summary>
+    /// 死亡処理
+    /// </summary>
+    void BombDeath()
+    {
+        //爆発SEオブジェクト生成
+        Instantiate(explosionSE, transform.position, Quaternion.identity);
+        //爆発パーティクル生成
+        Instantiate(explosionParticle, transform.position, Quaternion.identity);
+        //壁管理クラスから自身を除外
+        wallController.CmdRemoveBombs(this.gameObject, wallType);
+    }
+
+    /// <summary>
+    /// ターゲット変更
+    /// </summary>
+    /// <param name="newOrigin"></param>
     public void TargetChange(GameObject newOrigin)
     {
+        //移動量を0に
         rigid.velocity = Vector3.zero;
+        //死亡時間初期化
         deathTime = 10.0f;
+        //投擲元をターゲットに
         targetObject = originObject;
+        //新しい投擲元を追加
         originObject = newOrigin;
-        if (targetObject.CompareTag("Enemy")&&!IsNetwork.isNetConnect)
+        //目標がオフラインのエネミーだったら
+        if (targetObject.CompareTag("Enemy")&&!IsNetwork.isOnline)
         {
+            //移動量設定
             velocity = (targetObject.transform.position - transform.position).normalized;
-            bombState = BombState.RETURNMOVE;
+            //直線移動
+            bombState = BombState.STRAIGHT;
         }
         else
         {
-            bombState = BombState.RETURNSET;
+            //投げ返し
+            bombState = BombState.THROWSET;
         }
     }
     
@@ -205,8 +221,9 @@ public class BombMove : NetworkBehaviour
      /// </summary>
      /// <param name="bomb">爆弾</param>
      /// <param name="angle">角度</param>
-    void BombThrow(GameObject targetObj)
+    void BombFly(GameObject targetObj)
     {
+        //角度設定
         angle = Random.Range(30, 60);
 
         //ターゲットポジション設定
@@ -233,23 +250,37 @@ public class BombMove : NetworkBehaviour
         bombState = BombState.NORMAL;
     }
 
+    /// <summary>
+    /// サーバーへ位置送信
+    /// </summary>
+    /// <param name="position"></param>
     [Command]
     void CmdMoveBomb(Vector3 position)
     {
+        //サーバーに接続しているクライアント
         foreach (var conn in NetworkServer.connections)
         {
+            //つながっていないやつには渡さない
             if (conn == null || !conn.isReady)
                 continue;
+            //自身にも渡さない
             if (conn == connectionToClient)
                 continue;
 
+            //サーバーから位置送信
             TargetSyncTransform(conn, position);
         }
     }
 
+    /// <summary>
+    /// サーバーから位置送信
+    /// </summary>
+    /// <param name="conn"></param>
+    /// <param name="position"></param>
     [TargetRpc]
     void TargetSyncTransform(NetworkConnection conn, Vector3 position)
     {
+        //位置更新
         transform.position = position;
     }
 

@@ -15,7 +15,7 @@ public enum CountDownState
 {
     NUMBER,//数値
     START,//”Start”表示
-    END
+    END//終了
 }
 
 public class CountDownController : MonoBehaviour {
@@ -66,8 +66,9 @@ public class CountDownController : MonoBehaviour {
                 //時間が来たら
                 if (countDownTime <= 0)
                 {
+                    //非表示
                     countDownText.enabled = false;
-                    //メインシーン管理クラスのフラグ設定
+                    //状態遷移
                     countDownState = CountDownState.END;
                 }
                 break;

@@ -16,7 +16,9 @@ public class WallController : NetworkBehaviour {
     //爆弾リスト
     [HideInInspector]
     public List<List<GameObject>> bombs;
+    //フェードクラス
     FadeController fadeController;
+    //リセットできるかどうか
     bool isReset = false;
 
     void Start()
@@ -32,13 +34,17 @@ public class WallController : NetworkBehaviour {
 
     void Update()
     {
+        //フェードクラスが未取得なら
         if (fadeController == null)
         {
+            //フェードクラス取得
             fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
             return;
         }
+        //フェードクラスが終了状態なら
         if (fadeController.isSceneEnd)
         {
+            //爆弾リセット
             CmdBombsReset();
         }
     }
@@ -53,8 +59,6 @@ public class WallController : NetworkBehaviour {
     {
         //自身が投げられた壁のリストに追加
         bombs[(int)wallType].Add(bomb);
-        //if (IsNetwork.isNetConnect)
-        //    ClientCheck(bombs);
             
     }
 
@@ -68,8 +72,6 @@ public class WallController : NetworkBehaviour {
     {
         //リストから除外
         bombs[(int)wallType].Remove(bomb);
-        //if (IsNetwork.isNetConnect)
-        //    ClientCheck(bombs);
     }
 
    // [Command]
@@ -89,27 +91,6 @@ public class WallController : NetworkBehaviour {
                 }
             }
         }
-        //if (IsNetwork.isNetConnect)
-        //    ClientCheck(bombs);
         isReset = true;
     }
-
-    //void ClientCheck(List<List<GameObject>> bombs)
-    //{
-    //    foreach (var conn in NetworkServer.connections)
-    //    {
-    //        if (conn == null || !conn.isReady)
-    //            continue;
-    //        if (conn == connectionToClient)
-    //            continue;
-
-    //        TargetSyncList(conn, bombs);
-    //    }
-    //}
-
-    //[TargetRpc]
-    //void TargetSyncList(NetworkConnection conn, List<List<GameObject>> bombs)
-    //{
-    //    this.bombs = bombs;
-    //}
 }

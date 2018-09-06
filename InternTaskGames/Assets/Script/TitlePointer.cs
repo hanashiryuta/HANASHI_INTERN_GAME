@@ -44,6 +44,9 @@ public class TitlePointer : MonoBehaviour {
         Application.Quit();
     }
 
+    /// <summary>
+    /// オンラインへ
+    /// </summary>
     public void MultiLobbyButton()
     {
         //クリックSE再生

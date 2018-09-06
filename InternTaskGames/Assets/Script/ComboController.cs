@@ -14,12 +14,14 @@ public class ComboController : MonoBehaviour {
     public static int comboCount;
     //コンボ数表示テキスト
     public Text[] comboTexts;
-
+    //カウントダウンクラス
     CountDownController countDownController;
+
     // Use this for initialization
     void Start () {
         //コンボ数初期化
         ComboInit();
+        //カウントダウンクラス取得
         countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
     }
 	
@@ -27,8 +29,10 @@ public class ComboController : MonoBehaviour {
 	void Update () {
 		foreach(var cx in comboTexts)
         {
+            //カウントダウンが終わっていたら
             if (countDownController.countDownState == CountDownState.END)
             {
+                //表示
                 cx.enabled = true;
                 //コンボ数が0以下なら
                 if (comboCount <= 0)
@@ -41,6 +45,7 @@ public class ComboController : MonoBehaviour {
             }
             else
             {
+                //非表示
                 cx.enabled = false;
             }
         }

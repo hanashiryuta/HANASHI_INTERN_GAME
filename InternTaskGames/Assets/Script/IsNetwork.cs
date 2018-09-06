@@ -1,16 +1,23 @@
-﻿using System.Collections;
+﻿///
+///製作日：2018/09/06
+///作成者：葉梨竜太
+///ネットワーク判定クラス
+///
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class IsNetwork : MonoBehaviour {
 
+    //インスタンス
     static IsNetwork instance;
-
-    public static bool isNetConnect = false;
+    //オンラインかどうか
+    public static bool isOnline = false;
 
 	// Use this for initialization
 	void Awake () {
+        //シングルトン処理
 		if(instance == null)
         {
             instance = this;
@@ -31,26 +38,31 @@ public class IsNetwork : MonoBehaviour {
      /// <param name="mode"></param>
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        //読み込んだシーンによってBGM切り替え
+        //読み込んだシーンによってフラグ切り替え
         switch (scene.name)
         {
             //タイトル
             case "Title":
-                isNetConnect = false;
+                //オフライン
+                isOnline = false;
                 break;
             //ゲームメイン
             case "gameMain":
-                isNetConnect = false;
+                //オフライン
+                isOnline = false;
                 break;
             //リザルト
             case "Result":
-                isNetConnect = false;
+                //オフライン
+                isOnline = false;
                 break;
             case "Lobby":
-                isNetConnect = true;
+                //オンライン
+                isOnline = true;
                 break;
             case "VSMode":
-                isNetConnect = true;
+                //オンライン
+                isOnline = true;
                 break;
         }
     }
