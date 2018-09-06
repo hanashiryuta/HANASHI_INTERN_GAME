@@ -25,8 +25,6 @@ public class ScoreController : MonoBehaviour {
     Text magniText;
     //カウントダウンクラス
     CountDownController countDownController;
-    //フェードクラス
-    FadeController fadeController;
     //ハイスコアが保存できるかどうか
     bool isHighScoreSet;
 
@@ -47,8 +45,6 @@ public class ScoreController : MonoBehaviour {
         }
         //カウントダウンクラス取得
         countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
-        //フェードクラス取得
-        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
     }
 	
 	// Update is called once per frame
@@ -84,7 +80,7 @@ public class ScoreController : MonoBehaviour {
             magniText.enabled = false;
         }
         //フェードが終了状態なら
-        if(fadeController.isSceneEnd)
+        if(FadeController.isSceneEnd)
         {
             //ハイスコアセーブ
             SavedHighScore();

@@ -25,8 +25,6 @@ public class EnemyBombThrow : NetworkBehaviour
     AudioSource audioSource;
     //カウントダウンクラス
     CountDownController countDownController;
-    //フェードクラス
-    FadeController fadeController;
 
     // Use this for initialization
     void Start()
@@ -37,8 +35,6 @@ public class EnemyBombThrow : NetworkBehaviour
         targetObject = GameObject.FindGameObjectWithTag("MainCamera");
         //オーディオソース取得
         audioSource = GetComponent<AudioSource>();
-        //フェードクラス取得
-        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
 
         //オフラインなら
         if (!IsNetwork.isOnline)
@@ -64,7 +60,7 @@ public class EnemyBombThrow : NetworkBehaviour
     void OnlineUpdate()
     {
         //フェードが終了状態でなければ
-        if (!fadeController.isSceneEnd)
+        if (!FadeController.isSceneEnd)
         {
             //射出までの時間を減らしていく
             throwTime -= Time.deltaTime;
@@ -84,7 +80,7 @@ public class EnemyBombThrow : NetworkBehaviour
     void OfflineUpdate()
     {
         //カウントダウンが終了しており、フェードがシーン終了状態でなければ
-        if (countDownController.countDownState == CountDownState.END&&!fadeController.isSceneEnd)
+        if (countDownController.countDownState == CountDownState.END&&!FadeController.isSceneEnd)
         {
             //射出までの時間を減らしていく
             throwTime -= Time.deltaTime;

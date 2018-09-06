@@ -16,7 +16,7 @@ public class EnemyMove : MonoBehaviour {
         //y軸は回転させない
         diff.y = 0;
         //方向の絶対値が0以上なら
-        if (diff.magnitude > 0.01f)
+        if (diff.magnitude > 0.01f&&!IsNetwork.isOnline)
         {
             //自身を回転
             transform.rotation = Quaternion.LookRotation(diff);

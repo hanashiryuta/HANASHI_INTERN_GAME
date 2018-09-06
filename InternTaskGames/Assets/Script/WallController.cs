@@ -16,8 +16,6 @@ public class WallController : NetworkBehaviour {
     //爆弾リスト
     [HideInInspector]
     public List<List<GameObject>> bombs;
-    //フェードクラス
-    FadeController fadeController;
     //リセットできるかどうか
     bool isReset = false;
 
@@ -34,15 +32,8 @@ public class WallController : NetworkBehaviour {
 
     void Update()
     {
-        //フェードクラスが未取得なら
-        if (fadeController == null)
-        {
-            //フェードクラス取得
-            fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
-            return;
-        }
         //フェードクラスが終了状態なら
-        if (fadeController.isSceneEnd)
+        if (FadeController.isSceneEnd)
         {
             //爆弾リセット
             CmdBombsReset();

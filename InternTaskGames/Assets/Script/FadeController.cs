@@ -33,15 +33,16 @@ public class FadeController : MonoBehaviour {
     public bool isSceneStart;
     //シーンが終了するかどうか
     [HideInInspector]
-    public bool isSceneEnd;
+    public static bool isSceneEnd;
     //フェード状態
     [HideInInspector]
-    public FadeActionState fadeActionState = FadeActionState.SceneStart;
+    public static FadeActionState fadeActionState = FadeActionState.SceneStart;
 
 	// Use this for initialization
 	void Start () {
         //フェード状態初期化
         fadeActionState = FadeActionState.SceneStart;
+        isSceneEnd = false;
         //カラー保存
         fadeColor = fadeImage.color;
         //α値初期化

@@ -133,6 +133,8 @@ public class BombMove : NetworkBehaviour
 
             //直線
             case BombState.STRAIGHT:
+                //移動量設定
+                velocity = (targetObject.transform.position - transform.position).normalized;
                 //ランダム回転
                 transform.Rotate(new Vector3(Random.Range(0, 180),
                                              Random.Range(0, 180),
@@ -204,8 +206,6 @@ public class BombMove : NetworkBehaviour
         //目標がオフラインのエネミーだったら
         if (targetObject.CompareTag("Enemy")&&!IsNetwork.isOnline)
         {
-            //移動量設定
-            velocity = (targetObject.transform.position - transform.position).normalized;
             //直線移動
             bombState = BombState.STRAIGHT;
         }

@@ -24,23 +24,19 @@ public class CountDownController : MonoBehaviour {
     public Text countDownText;
     //カウントダウン時間
     float countDownTime = 3;
-    //フェード管理クラス
-    FadeController fadeController;
     //カウントダウン状態
     [HideInInspector]
     public CountDownState countDownState = CountDownState.NUMBER;
 
     // Use this for initialization
     void Start () {
-        //フェードコントローラー取得
-        fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
         //フェード状態が待機状態なら
-        if (fadeController.fadeActionState == FadeActionState.Stay)
+        if (FadeController.fadeActionState == FadeActionState.Stay)
             //カウントダウンを減らす
             countDownTime -= Time.deltaTime;
         //カウントダウン状態で処理変更

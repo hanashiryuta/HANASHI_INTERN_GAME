@@ -19,6 +19,9 @@ public class TimeController : MonoBehaviour {
     public float gameTime = 60.00f;
     //カウントダウンクラス
     CountDownController countDownController;
+    //時間終了可
+    [HideInInspector]
+    public bool isTimeEnd;
 
 	// Use this for initialization
 	void Start () {
@@ -47,7 +50,7 @@ public class TimeController : MonoBehaviour {
             {
                 gameTime = 0;
                 //フェードアウト開始
-                GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
+                FadeController.isSceneEnd = true;
             }
         }
         else

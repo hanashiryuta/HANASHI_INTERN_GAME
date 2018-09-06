@@ -35,8 +35,6 @@ public class EnemySpawnController : NetworkBehaviour
     public WallType wallType;
     //カウントダウンクラス
     CountDownController countDownController;
-    //フェードクラス
-    FadeController fadeController;
 
     // Use this for initialization
     void Start ()
@@ -55,14 +53,6 @@ public class EnemySpawnController : NetworkBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        //フェードを取得できていなければ
-        if (fadeController == null)
-        {
-            //フェード取得
-            fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
-            return;
-        }
-
         //オンラインかオフラインかで動作を変える
         if (IsNetwork.isOnline)
             OnlineUpdate();
@@ -77,7 +67,7 @@ public class EnemySpawnController : NetworkBehaviour
     void OnlineUpdate()
     {
         //フェードが終了状態でなければ
-        if (!fadeController.isSceneEnd)
+        if (!FadeController.isSceneEnd)
         {
             //スポーン時間を減らす
             spawnTime -= Time.deltaTime;
@@ -94,7 +84,7 @@ public class EnemySpawnController : NetworkBehaviour
     void OfflineUpdate()
     {
         //カウントダウンが終了し、フェードが終了状態でなければ
-        if (countDownController.countDownState == CountDownState.END && !fadeController.isSceneEnd)
+        if (countDownController.countDownState == CountDownState.END && !FadeController.isSceneEnd)
         {
             //スポーン時間を減らす
             spawnTime -= Time.deltaTime;

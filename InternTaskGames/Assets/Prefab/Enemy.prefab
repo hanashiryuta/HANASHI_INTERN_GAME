@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDeath: 0
-  deathTime: 4
+  deathTime: 8
   anim: {fileID: 95013783395373130}
 --- !u!114 &114239523379974520
 MonoBehaviour:

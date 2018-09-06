@@ -29,7 +29,7 @@ public class ResultPointer : MonoBehaviour
         //クリックSE再生
         audioSource.PlayOneShot(clickSE);
         //フェードアウト開始
-        GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
+        FadeController.isSceneEnd = true;
     }
 
     /// <summary>

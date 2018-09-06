@@ -30,7 +30,7 @@ public class TitlePointer : MonoBehaviour {
         //クリックSE再生
         audioSource.PlayOneShot(clickSE);
         //フェードアウト開始
-        GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
+        FadeController.isSceneEnd = true;
     }
 
     /// <summary>
@@ -53,6 +53,6 @@ public class TitlePointer : MonoBehaviour {
         audioSource.PlayOneShot(clickSE);
         GameObject.Find("Fade").GetComponent<FadeController>().nextScene = "Lobby";
         //フェードアウト開始
-        GameObject.Find("Fade").GetComponent<FadeController>().isSceneEnd = true;
+        FadeController.isSceneEnd = true;
     }
 }
