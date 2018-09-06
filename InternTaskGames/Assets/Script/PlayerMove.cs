@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour {
 
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         //爆弾に当たったら
         if (col.gameObject.CompareTag("Bomb"))

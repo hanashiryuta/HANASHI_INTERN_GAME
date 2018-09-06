@@ -7,14 +7,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class WallController : MonoBehaviour {
+public class WallController : NetworkBehaviour {
 
     //壁の位置
     public GameObject[] wallPoint;
     //爆弾リスト
     [HideInInspector]
     public List<List<GameObject>> bombs;
+    FadeController fadeController;
+    bool isReset = false;
 
     void Start()
     {
@@ -27,40 +30,86 @@ public class WallController : MonoBehaviour {
         };
     }
 
+    void Update()
+    {
+        if (fadeController == null)
+        {
+            fadeController = GameObject.Find("Fade").GetComponent<FadeController>();
+            return;
+        }
+        if (fadeController.isSceneEnd)
+        {
+            CmdBombsReset();
+        }
+    }
+
+    //[Command]
     /// <summary>
     /// 爆弾追加
     /// </summary>
     /// <param name="bomb"></param>
     /// <param name="wallType"></param>
-    public void AddBombs(GameObject bomb,WallType wallType)
+    public void CmdAddBombs(GameObject bomb,WallType wallType)
     {
         //自身が投げられた壁のリストに追加
         bombs[(int)wallType].Add(bomb);
+        //if (IsNetwork.isNetConnect)
+        //    ClientCheck(bombs);
+            
     }
 
+    //[Command]
     /// <summary>
     /// 爆弾除外
     /// </summary>
     /// <param name="bomb"></param>
     /// <param name="wallType"></param>
-    public void RemoveBombs(GameObject bomb, WallType wallType)
+    public void CmdRemoveBombs(GameObject bomb, WallType wallType)
     {
         //リストから除外
         bombs[(int)wallType].Remove(bomb);
+        //if (IsNetwork.isNetConnect)
+        //    ClientCheck(bombs);
     }
 
+   // [Command]
     /// <summary>
     /// 爆弾初期化
     /// </summary>
-    public void BombsReset()
+    public void CmdBombsReset()
     {
-        //すべての爆弾を除外
-        foreach(var cx in bombs)
+        if (!isReset)
         {
-            for(int i = 0; i < cx.Count; i++)
+            //すべての爆弾を除外
+            foreach (var cx in bombs)
             {
-                cx[i].GetComponent<BombMove>().bombState = BombState.DEATH;
+                for (int i = 0; i < cx.Count; i++)
+                {
+                    cx[i].GetComponent<BombMove>().bombState = BombState.DEATH;
+                }
             }
         }
+        //if (IsNetwork.isNetConnect)
+        //    ClientCheck(bombs);
+        isReset = true;
     }
+
+    //void ClientCheck(List<List<GameObject>> bombs)
+    //{
+    //    foreach (var conn in NetworkServer.connections)
+    //    {
+    //        if (conn == null || !conn.isReady)
+    //            continue;
+    //        if (conn == connectionToClient)
+    //            continue;
+
+    //        TargetSyncList(conn, bombs);
+    //    }
+    //}
+
+    //[TargetRpc]
+    //void TargetSyncList(NetworkConnection conn, List<List<GameObject>> bombs)
+    //{
+    //    this.bombs = bombs;
+    //}
 }

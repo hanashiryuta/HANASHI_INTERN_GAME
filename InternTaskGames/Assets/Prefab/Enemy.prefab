@@ -277,14 +277,14 @@ GameObject:
   m_Component:
   - component: {fileID: 4082837266574160}
   - component: {fileID: 114198367365830220}
-  - component: {fileID: 114330366056562248}
+  - component: {fileID: 114845629018830930}
   - component: {fileID: 114004910158513000}
   - component: {fileID: 65474067679980954}
   - component: {fileID: 82099997697553266}
-  - component: {fileID: 114615835807499698}
+  - component: {fileID: 114239523379974520}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -906,23 +906,7 @@ MonoBehaviour:
   isDeath: 0
   deathTime: 4
   anim: {fileID: 95013783395373130}
---- !u!114 &114330366056562248
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1664177999866586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 513d9452d84f9a84c9e2b35c0ba0557a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallType: 1
-  originBomb: {fileID: 1599090907157618, guid: 76a98c4c9466e6645a0879e0d9f3d553, type: 2}
-  angle: 30
-  anim: {fileID: 95013783395373130}
-  throwSE: {fileID: 8300000, guid: bc2ded4db228ef349badec34d9f362c5, type: 3}
---- !u!114 &114615835807499698
+--- !u!114 &114239523379974520
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -952,8 +936,23 @@ MonoBehaviour:
     i13: 140
     i14: 219
     i15: 30
-  m_ServerOnly: 0
+  m_ServerOnly: 1
   m_LocalPlayerAuthority: 0
+--- !u!114 &114845629018830930
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1664177999866586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 472e42b3a1a0e374e8c200b26eb80f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallType: 1
+  originBomb: {fileID: 1599090907157618, guid: 76a98c4c9466e6645a0879e0d9f3d553, type: 2}
+  anim: {fileID: 95013783395373130}
+  throwSE: {fileID: 8300000, guid: bc2ded4db228ef349badec34d9f362c5, type: 3}
 --- !u!137 &137146622695435646
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

@@ -15,6 +15,7 @@ public enum CountDownState
 {
     NUMBER,//数値
     START,//”Start”表示
+    END
 }
 
 public class CountDownController : MonoBehaviour {
@@ -26,7 +27,8 @@ public class CountDownController : MonoBehaviour {
     //フェード管理クラス
     FadeController fadeController;
     //カウントダウン状態
-    CountDownState countDownState = CountDownState.NUMBER;
+    [HideInInspector]
+    public CountDownState countDownState = CountDownState.NUMBER;
 
     // Use this for initialization
     void Start () {
@@ -37,8 +39,6 @@ public class CountDownController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        //フラグによって可視状態が変わる
-        countDownText.enabled = MainSceneController.isCountDown;
         //フェード状態が待機状態なら
         if (fadeController.fadeActionState == FadeActionState.Stay)
             //カウントダウンを減らす
@@ -66,8 +66,9 @@ public class CountDownController : MonoBehaviour {
                 //時間が来たら
                 if (countDownTime <= 0)
                 {
+                    countDownText.enabled = false;
                     //メインシーン管理クラスのフラグ設定
-                    MainSceneController.isCountDown = false;
+                    countDownState = CountDownState.END;
                 }
                 break;
         }

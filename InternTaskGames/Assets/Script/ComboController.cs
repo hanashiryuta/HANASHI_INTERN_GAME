@@ -15,25 +15,34 @@ public class ComboController : MonoBehaviour {
     //コンボ数表示テキスト
     public Text[] comboTexts;
 
-	// Use this for initialization
-	void Start () {
+    CountDownController countDownController;
+    // Use this for initialization
+    void Start () {
         //コンボ数初期化
         ComboInit();
-	}
+        countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		foreach(var cx in comboTexts)
         {
-            cx.enabled = TimeController.isTimeStart;
-            //コンボ数が0以下なら
-            if (comboCount <= 0)
-                //何も表示しない
-                cx.text = "";
-            //それ以外なら
+            if (countDownController.countDownState == CountDownState.END)
+            {
+                cx.enabled = true;
+                //コンボ数が0以下なら
+                if (comboCount <= 0)
+                    //何も表示しない
+                    cx.text = "";
+                //それ以外なら
+                else
+                    //コンボ数表示
+                    cx.text = comboCount + "Combo!";
+            }
             else
-                //コンボ数表示
-                cx.text = comboCount + "Combo!";
+            {
+                cx.enabled = false;
+            }
         }
 	}
 

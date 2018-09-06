@@ -86,12 +86,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4440564780609796}
   - component: {fileID: 33718309216821940}
+  - component: {fileID: 114880576483006696}
   - component: {fileID: 135568347179275878}
   - component: {fileID: 23127857171782226}
   - component: {fileID: 54147547556459882}
-  - component: {fileID: 114405892340063948}
   - component: {fileID: 82557917638907476}
-  - component: {fileID: 114872007985068784}
+  - component: {fileID: 114278475083612962}
   m_Layer: 9
   m_Name: Bomb
   m_TagString: Bomb
@@ -427,27 +427,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &114405892340063948
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1599090907157618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeca4e68353a5e84a83a80cd53d47a0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bombState: 0
-  enemy: {fileID: 0}
-  wallType: 1
-  Grav: {x: 0, y: 4, z: 0}
-  returnSpeed: 1
-  deathTime: 5
-  explosionParticle: {fileID: 100004, guid: b46890100828db6429ff69c322b45893, type: 2}
-  explosionSE: {fileID: 1641542992429194, guid: ba3ee3e867e2c7b4d8d3f96e6b0b8b97,
-    type: 2}
---- !u!114 &114872007985068784
+--- !u!114 &114278475083612962
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -479,6 +459,27 @@ MonoBehaviour:
     i15: 83
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114880576483006696
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1599090907157618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f54f2b3342b77f4e92ae223d870058f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bombState: 0
+  originObject: {fileID: 0}
+  wallType: 1
+  Grav: {x: 0, y: 4, z: 0}
+  targetObject: {fileID: 0}
+  returnSpeed: 0.1
+  deathTime: 10
+  explosionParticle: {fileID: 100004, guid: b46890100828db6429ff69c322b45893, type: 2}
+  explosionSE: {fileID: 1641542992429194, guid: ba3ee3e867e2c7b4d8d3f96e6b0b8b97,
+    type: 2}
 --- !u!135 &135568347179275878
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -486,7 +487,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1599090907157618}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

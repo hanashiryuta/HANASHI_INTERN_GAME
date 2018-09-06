@@ -11,20 +11,11 @@ public class MyNetWorkManager : NetworkManager {
 	void Start () {
         networkDiscover = GetComponent<MyNetworkDiscover>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.A))
-        {
-            NetworkManager.singleton.StartHost();
-            networkDiscover.Initialize();
-            networkDiscover.StartAsServer();
-        }
-        else if (Input.GetKeyDown(KeyCode.Z))
-        {
-            singleton.StopHost();
-        }
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
