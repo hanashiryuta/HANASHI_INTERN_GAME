@@ -26,7 +26,7 @@ public class PlayerMove : NetworkBehaviour {
         //爆弾に当たったら
         if (col.gameObject.CompareTag("Bomb"))
         {
-            if (IsNetwork.isOnline)
+            if (!IsNetwork.isOnline)
             {
                 //スコア初期化
                 ComboController.ComboInit();
@@ -35,7 +35,9 @@ public class PlayerMove : NetworkBehaviour {
             }
             else
             {
-                GameObject.Find(gameObject.name + "Score").GetComponent<OnlineScore>().OnlineScoreAdd();
+                GameObject.Find(gameObject.name + "Score").GetComponent<OnlineScore>().CmdOnlineScoreAdd();
+                //爆弾消滅
+                col.gameObject.GetComponent<BombMove>().bombState = BombState.DEATH;
             }
         }
     }

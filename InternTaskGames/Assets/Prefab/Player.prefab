@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 114600208395149616}
   - component: {fileID: 114347724480702938}
   - component: {fileID: 114800396878871268}
-  - component: {fileID: 135020645110745470}
+  - component: {fileID: 136219736586448138}
   m_Layer: 0
   m_Name: Player
   m_TagString: MainCamera
@@ -1787,8 +1787,8 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!135 &135020645110745470
-SphereCollider:
+--- !u!136 &136219736586448138
+CapsuleCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -1796,8 +1796,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 1.5
+  m_Height: 5
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!222 &222245880401951884
 CanvasRenderer:

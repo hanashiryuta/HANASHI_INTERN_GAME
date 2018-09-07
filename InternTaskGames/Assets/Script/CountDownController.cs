@@ -26,7 +26,7 @@ public class CountDownController : NetworkBehaviour {
     public Text countDownText;
     //カウントダウン時間
     [SyncVar]
-    float countDownTime = 3;
+    public float countDownTime = 3;
     //カウントダウン状態
     [HideInInspector]
     public CountDownState countDownState = CountDownState.NUMBER;
@@ -84,9 +84,9 @@ public class CountDownController : NetworkBehaviour {
 
     private void OnlineUpdate()
     {
-        if (NetworkManager.singleton.numPlayers <= 1)
+        if (NetworkManager.singleton.numPlayers <= 1&&isServer)
             return;
-
+        string text = "";
         //フェード状態が待機状態なら
         if (FadeController.fadeActionState == FadeActionState.Stay&&isServer)
             //カウントダウンを減らす
@@ -97,7 +97,7 @@ public class CountDownController : NetworkBehaviour {
             //数値表示
             case CountDownState.NUMBER:
                 //小数点以下切り上げで表示
-                countDownText.text = Mathf.Ceil(countDownTime).ToString("0");
+                text = Mathf.Ceil(countDownTime).ToString("0");
                 //時間が来たら
                 if (countDownTime <= 0)
                 {
@@ -110,7 +110,7 @@ public class CountDownController : NetworkBehaviour {
             //”Start”表示
             case CountDownState.START:
                 //Start表示
-                countDownText.text = "Start!";
+                text = "Start!";
                 //時間が来たら
                 if (countDownTime <= 0)
                 {
@@ -121,5 +121,8 @@ public class CountDownController : NetworkBehaviour {
                 }
                 break;
         }
+        
+        //小数点以下切り上げで表示
+        countDownText.text =text;
     }
 }

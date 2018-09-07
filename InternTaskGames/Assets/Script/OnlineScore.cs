@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class OnlineScore : MonoBehaviour {
+public class OnlineScore : NetworkBehaviour {
 
-    [HideInInspector]
+    [HideInInspector,SyncVar]
     public float onlineScore;
 
     Text onlineScoreText;
@@ -20,7 +21,8 @@ public class OnlineScore : MonoBehaviour {
         onlineScoreText.text = onlineScore.ToString("000");
     }
 
-    public void OnlineScoreAdd()
+    [Command]
+    public void CmdOnlineScoreAdd()
     {
         onlineScore++;
     }
