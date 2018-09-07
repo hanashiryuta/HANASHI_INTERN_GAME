@@ -11,6 +11,7 @@ TagManager:
   - FRONTWALL
   - RIGHTWALL
   - RacketMoveRange
+  - Enemy
   layers:
   - Default
   - TransparentFX

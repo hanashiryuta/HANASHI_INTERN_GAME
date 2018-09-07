@@ -29,17 +29,20 @@ public class FadeController : MonoBehaviour {
     float alpha = 1.3f;
     //次のシーン
     public string nextScene;
+    [HideInInspector]
+    public bool isSceneStart;
     //シーンが終了するかどうか
     [HideInInspector]
-    public bool isSceneEnd;
+    public static bool isSceneEnd;
     //フェード状態
     [HideInInspector]
-    public FadeActionState fadeActionState = FadeActionState.SceneStart;
+    public static FadeActionState fadeActionState = FadeActionState.SceneStart;
 
 	// Use this for initialization
 	void Start () {
         //フェード状態初期化
         fadeActionState = FadeActionState.SceneStart;
+        isSceneEnd = false;
         //カラー保存
         fadeColor = fadeImage.color;
         //α値初期化
@@ -60,6 +63,7 @@ public class FadeController : MonoBehaviour {
                 //透明になったら
                 if (alpha <= 0.0f)
                 {
+                    isSceneStart = true;
                     //状態遷移
                     fadeActionState = FadeActionState.Stay;
                 }

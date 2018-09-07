@@ -65,6 +65,14 @@ public class BGMManager : MonoBehaviour {
             case "Result":
                 audioSource.clip = resultBGM;
                 break;
+            //オンライン待機ロビー
+            case "Lobby":
+                audioSource.clip = titleBGM;
+                break;
+            //オンライン対戦画面
+            case "VSMode":
+                audioSource.clip = gameMainBGM;
+                break;
         }
         //BGMスタート
         audioSource.Play();

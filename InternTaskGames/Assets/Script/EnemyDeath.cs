@@ -41,13 +41,14 @@ public class EnemyDeath : MonoBehaviour {
         }
 	}
 
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         //爆弾に当たったら
         if(col.gameObject.CompareTag("Bomb"))
         {
             //爆弾の状態が返され中なら
-            if (col.gameObject.GetComponent<BombMove>().bombState == BombState.RETURNMOVE)
+            //if (col.gameObject.GetComponent<BombMove>().bombState == BombState.RETURNMOVE)
+            if(col.gameObject.GetComponent<BombMove>().targetObject == gameObject)
             {
                 //アニメ再生
                 anim.SetTrigger("Death");

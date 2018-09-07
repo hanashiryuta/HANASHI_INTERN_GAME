@@ -20,7 +20,7 @@ public class RacketController : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
     }
 
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         //爆弾に当たったら
         if (col.gameObject.CompareTag("Bomb"))
@@ -32,7 +32,7 @@ public class RacketController : MonoBehaviour {
             //コンボ加算
             ComboController.ComboAdd();
             //爆弾状態変更
-            col.gameObject.GetComponent<BombMove>().bombState = BombState.RETURNSET;
+            col.gameObject.GetComponent<BombMove>().TargetChange(gameObject);
         }
     }
 }

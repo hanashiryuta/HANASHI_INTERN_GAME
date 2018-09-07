@@ -23,6 +23,10 @@ public class ScoreController : MonoBehaviour {
     public GameObject magniTextObj;
     //スコア倍率表示テキスト
     Text magniText;
+    //カウントダウンクラス
+    CountDownController countDownController;
+    //ハイスコアが保存できるかどうか
+    bool isHighScoreSet;
 
     // Use this for initialization
     void Start () {
@@ -39,28 +43,48 @@ public class ScoreController : MonoBehaviour {
         {
             PlayerPrefs.SetString("Ranking","0,0,0,0,0,0,0,0,0,0");
         }
+        //カウントダウンクラス取得
+        countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        scoreText.enabled = TimeController.isTimeStart;
-        magniText.enabled = TimeController.isTimeStart;
-        //コンボ数取得
-        float comboCount = (float)ComboController.ReturnCombo();
-        //スコア倍率設定
-        scoreMagni = (1 + comboCount / 10);
-        //スコア表示
-        scoreText.text = "Score:" + score.ToString("00000");
-        //スコア倍率が0以下なら
-        if (scoreMagni <= 0)
-            //表示しない
-            magniText.text = "";
-        //それ以外なら
+        //カウントダウンが終わっていたら
+        if (countDownController.countDownState == CountDownState.END)
+        {
+            //表示
+            scoreText.enabled = true;
+            //表示
+            magniText.enabled = true;
+            //コンボ数取得
+            float comboCount = (float)ComboController.ReturnCombo();
+            //スコア倍率設定
+            scoreMagni = (1 + comboCount / 10);
+            //スコア表示
+            scoreText.text = "Score:" + score.ToString("00000");
+            //スコア倍率が0以下なら
+            if (scoreMagni <= 0)
+                //表示しない
+                magniText.text = "";
+            //それ以外なら
+            else
+                //スコア倍率表示
+                magniText.text = "×" + scoreMagni.ToString("F1");
+        }
         else
-            //スコア倍率表示
-            magniText.text = "×" + scoreMagni.ToString("F1");
-        
+        {
+            //非表示
+            scoreText.enabled = false;
+            //非表示
+            magniText.enabled = false;
+        }
+        //フェードが終了状態なら
+        if(FadeController.isSceneEnd)
+        {
+            //ハイスコアセーブ
+            SavedHighScore();
+        }
 	}
 
     /// <summary>
@@ -94,57 +118,62 @@ public class ScoreController : MonoBehaviour {
     /// <summary>
     /// ハイスコア保存クラス
     /// </summary>
-    public static void SavedHighScore()
+    public void SavedHighScore()
     {
-        //ランキング取得
-        string Ranking = PlayerPrefs.GetString("Ranking");
-        //配列作成
-        string[] rankString = Ranking.Split(',');
-        //floatリスト作成
-        List<float> ranking = new List<float>();
-
-        //数値化ランキング格納
-        foreach (var cx in rankString)
+        if (!isHighScoreSet)
         {
-            try {
-                ranking.Add(float.Parse(cx));
-            }
-            catch(FormatException)
+            //ランキング取得
+            string Ranking = PlayerPrefs.GetString("Ranking");
+            //配列作成
+            string[] rankString = Ranking.Split(',');
+            //floatリスト作成
+            List<float> ranking = new List<float>();
+
+            //数値化ランキング格納
+            foreach (var cx in rankString)
             {
-                break;
+                try
+                {
+                    ranking.Add(float.Parse(cx));
+                }
+                catch (FormatException)
+                {
+                    break;
+                }
             }
-        }
 
-        //現在のスコア保存
-        float charenger = score;
-        //ランキングと順次比較
-        for(int i = 0;i<ranking.Count;i++)
-        {
-            //リストからひとつ取り出す
-            float ranker = ranking[i];
-            //取り出したものより保存しているものが大きければ
-            if(ranker < charenger)
+            //現在のスコア保存
+            float charenger = score;
+            //ランキングと順次比較
+            for (int i = 0; i < ranking.Count; i++)
             {
-                //ランキング更新
-                float change = ranker;
-                ranker = charenger;
-                charenger = change;
+                //リストからひとつ取り出す
+                float ranker = ranking[i];
+                //取り出したものより保存しているものが大きければ
+                if (ranker < charenger)
+                {
+                    //ランキング更新
+                    float change = ranker;
+                    ranker = charenger;
+                    charenger = change;
+                }
+                //リストに戻す
+                ranking[i] = ranker;
             }
-            //リストに戻す
-            ranking[i] = ranker;
-        }
 
-        //保存用文字列
-        string setRanking = "";
-        //ランキング文字列化
-        for (int i = 0; i < ranking.Count-1; i++)
-        {
-            setRanking += ranking[i].ToString()+ ",";
+            //保存用文字列
+            string setRanking = "";
+            //ランキング文字列化
+            for (int i = 0; i < ranking.Count - 1; i++)
+            {
+                setRanking += ranking[i].ToString() + ",";
+            }
+            //最後は’、’を含まない
+            setRanking += ranking[ranking.Count - 1].ToString();
+            //ランキング更新
+            PlayerPrefs.DeleteKey("Ranking");
+            PlayerPrefs.SetString("Ranking", setRanking);
         }
-        //最後は’、’を含まない
-        setRanking += ranking[ranking.Count-1].ToString();
-        //ランキング更新
-        PlayerPrefs.DeleteKey("Ranking");
-        PlayerPrefs.SetString("Ranking", setRanking);
+        isHighScoreSet = true;
     }
 }
