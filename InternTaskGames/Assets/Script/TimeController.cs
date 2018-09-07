@@ -64,9 +64,8 @@ public class TimeController : NetworkBehaviour {
             //非表示
             timeText.enabled = false;
         }
-            //時間表示
-            timeText.text = "Time:" + gameTime.ToString("00.00");
-
+        //時間表示
+        timeText.text = "Time:" + gameTime.ToString("00.00");
     }
 
     void OfflineUpdate()

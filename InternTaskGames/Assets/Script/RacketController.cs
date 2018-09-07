@@ -14,10 +14,17 @@ public class RacketController : MonoBehaviour {
     //オーディオソース
     AudioSource audioSource;
 
+    string target;
+
     void Start()
     {
         //オーディオソース取得
         audioSource = GetComponent<AudioSource>();
+        if (transform.name == "Player1")
+            target = "Player2";
+        else
+            target = "Player1";
+
     }
 
     void OnTriggerEnter(Collider col)
@@ -31,8 +38,11 @@ public class RacketController : MonoBehaviour {
             ScoreController.ScoreAdd(100);
             //コンボ加算
             ComboController.ComboAdd();
-            //爆弾状態変更
-            col.gameObject.GetComponent<BombMove>().TargetChange(gameObject);
+            if (!IsNetwork.isOnline)
+                //爆弾状態変更
+                col.gameObject.GetComponent<BombMove>().TargetChange(gameObject);
+            else
+                col.gameObject.GetComponent<BombMove>().TargetChange(gameObject, GameObject.Find(target));
         }
     }
 }

@@ -193,6 +193,25 @@ public class BombMove : NetworkBehaviour
     /// ターゲット変更
     /// </summary>
     /// <param name="newOrigin"></param>
+    public void TargetChange(GameObject newOrigin,GameObject newTarget)
+    {
+        //移動量を0に
+        rigid.velocity = Vector3.zero;
+        //死亡時間初期化
+        deathTime = 10.0f;
+        //投擲元をターゲットに
+        targetObject = newTarget;
+        //新しい投擲元を追加
+        originObject = newOrigin;
+        //直線移動
+        bombState = BombState.THROWSET;
+        
+    }
+    
+    /// <summary>
+     /// ターゲット変更
+     /// </summary>
+     /// <param name="newOrigin"></param>
     public void TargetChange(GameObject newOrigin)
     {
         //移動量を0に
@@ -203,24 +222,15 @@ public class BombMove : NetworkBehaviour
         targetObject = originObject;
         //新しい投擲元を追加
         originObject = newOrigin;
-        //目標がオフラインのエネミーだったら
-        if (targetObject.CompareTag("Enemy")&&!IsNetwork.isOnline)
-        {
-            //直線移動
-            bombState = BombState.STRAIGHT;
-        }
-        else
-        {
-            //投げ返し
-            bombState = BombState.THROWSET;
-        }
+        //直線移動
+        bombState = BombState.STRAIGHT;
     }
-    
+
     /// <summary>
-     /// 爆弾を投げるメソッド
-     /// </summary>
-     /// <param name="bomb">爆弾</param>
-     /// <param name="angle">角度</param>
+    /// 爆弾を投げるメソッド
+    /// </summary>
+    /// <param name="bomb">爆弾</param>
+    /// <param name="angle">角度</param>
     void BombFly(GameObject targetObj)
     {
         //角度設定
