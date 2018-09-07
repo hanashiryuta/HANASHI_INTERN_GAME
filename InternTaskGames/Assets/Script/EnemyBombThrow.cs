@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
+
+public enum TargetPlayer
+{
+    Player1,
+    Player2,
+}
 
 public class EnemyBombThrow : NetworkBehaviour
 {
@@ -26,20 +33,20 @@ public class EnemyBombThrow : NetworkBehaviour
     //カウントダウンクラス
     CountDownController countDownController;
 
+    public TargetPlayer targetPlayer = TargetPlayer.Player1;
+
     // Use this for initialization
     void Start()
     {
         //クラス取得
         enemyDeath = GetComponent<EnemyDeath>();
-        //ターゲット検索
-        targetObject = GameObject.FindGameObjectWithTag("MainCamera");
         //オーディオソース取得
         audioSource = GetComponent<AudioSource>();
-
-        //オフラインなら
-        if (!IsNetwork.isOnline)
-            //カウントダウンクラス取得
-            countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
+        //ターゲット検索
+        targetObject = GameObject.FindGameObjectWithTag("MainCamera");
+        
+        //カウントダウンクラス取得
+        countDownController = GameObject.Find("CountDownUI").GetComponent<CountDownController>();
     }
 
     // Update is called once per frame
@@ -59,8 +66,10 @@ public class EnemyBombThrow : NetworkBehaviour
     [ServerCallback]
     void OnlineUpdate()
     {
-        //フェードが終了状態でなければ
-        if (!FadeController.isSceneEnd)
+        if (NetworkManager.singleton.numPlayers >= 2)
+            targetObject = GameObject.Find(targetPlayer.ToString());
+        //カウントダウンが終了しており、フェードがシーン終了状態でなければ
+        if (countDownController.countDownState == CountDownState.END && !FadeController.isSceneEnd)
         {
             //射出までの時間を減らしていく
             throwTime -= Time.deltaTime;
@@ -68,7 +77,7 @@ public class EnemyBombThrow : NetworkBehaviour
             //エネミーが消滅状態でなければ
             if (throwTime <= 0 && !enemyDeath.isDeath)
             {                
-                //サーバーでエネミースポーン
+                //サーバーで爆弾スポーン
                 NetworkServer.Spawn(BombThrow());
             }
         }

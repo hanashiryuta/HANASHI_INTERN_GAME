@@ -20,8 +20,8 @@ public class MyNetworkDiscover : NetworkDiscovery {
         //ネットワークマネージャー取得
         NetworkManager manager = NetworkManager.singleton;
         //すでにつながっているなら何もしない
-        if (manager.isNetworkActive)
-            return;
+        //if (manager.isNetworkActive)
+            //return;
         //アドレス取得
         manager.networkAddress = fromAddress;
         //クライアント起動

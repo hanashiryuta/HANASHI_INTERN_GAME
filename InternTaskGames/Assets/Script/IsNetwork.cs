@@ -13,7 +13,7 @@ public class IsNetwork : MonoBehaviour {
     //インスタンス
     static IsNetwork instance;
     //オンラインかどうか
-    public static bool isOnline = false;
+    public static bool isOnline = true;
 
 	// Use this for initialization
 	void Awake () {
